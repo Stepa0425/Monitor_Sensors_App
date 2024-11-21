@@ -30,9 +30,11 @@ public class Range {
 
     @NotNull(message = "The 'from' field cannot be empty")
     @Positive(message = "The 'from' field must be a positive integer")
-    private Integer from;
+    @Column(name = "range_from")
+    private Integer range_from;
 
     @NotNull(message = "The 'to' field cannot be empty")
     @Positive(message = "The 'to' field must be a positive integer")
-    private Integer to;
+    @Column(name = "range_to")
+    private Integer range_to;
 }
