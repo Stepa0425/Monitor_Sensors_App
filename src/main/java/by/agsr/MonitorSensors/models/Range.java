@@ -1,6 +1,5 @@
 package by.agsr.MonitorSensors.models;
 
-
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -29,11 +28,11 @@ public class Range {
     @Column(name = "id")
     private Long id;
 
-    @NotNull(message = "Поле 'from' не может быть пустым")
-    @Positive(message = "Поле 'from' должно быть положительным целым числом")
+    @NotNull(message = "The 'from' field cannot be empty")
+    @Positive(message = "The 'from' field must be a positive integer")
     private Integer from;
 
-    @NotNull(message = "Поле 'to' не может быть пустым")
-    @Positive(message = "Поле 'to' должно быть положительным целым числом")
+    @NotNull(message = "The 'to' field cannot be empty")
+    @Positive(message = "The 'to' field must be a positive integer")
     private Integer to;
 }
