@@ -20,8 +20,8 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "sensor_types")
-public class SensorType {
+@Table(name = "sensor_units")
+public class SensorUnit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
