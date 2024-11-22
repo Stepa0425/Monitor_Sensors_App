@@ -1,6 +1,7 @@
 package by.agsr.MonitorSensors.services;
 
-import by.agsr.MonitorSensors.models.Sensor;
+import by.agsr.MonitorSensors.dto.SensorRequestDTO;
+import by.agsr.MonitorSensors.dto.SensorResponseDTO;
 import by.agsr.MonitorSensors.repositories.SensorRepository;
 import by.agsr.MonitorSensors.validations.SensorValidator;
 import lombok.AccessLevel;
@@ -19,8 +20,7 @@ class SensorServiceImpl implements SensorService {
     private final SensorValidator sensorValidator;
 
     @Override
-    public Sensor createSensor(Sensor sensor) {
-        sensorValidator.validateNewSensor(sensor);
-        return sensorRepository.save(sensor);
+    public SensorResponseDTO createSensor(SensorRequestDTO sensor) {
+       return null;
     }
 }

@@ -1,8 +1,9 @@
 package by.agsr.MonitorSensors.services;
 
-import by.agsr.MonitorSensors.models.Sensor;
+import by.agsr.MonitorSensors.dto.SensorRequestDTO;
+import by.agsr.MonitorSensors.dto.SensorResponseDTO;
 
 public interface SensorService {
 
-    Sensor createSensor(Sensor sensor);
+    SensorResponseDTO createSensor(SensorRequestDTO sensorRequestDTO);
 }
