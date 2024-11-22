@@ -9,10 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,17 +30,15 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Min(value = 3, message = "Поле 'name' должно иметь не менее 3 символов")
-    @Max(value = 30, message = "Поле 'name' должно иметь не более 30 символов")
+    @Size(max = 30, min = 3, message = "The 'name' field should contain at least 3 and no more than 30 characters")
     @NotEmpty
     @Column(name = "name")
     private String name;
 
-    @Max(value = 15, message = "Поле 'model' должно иметь не более 15 символов")
+    @Size(max = 15, message = "The 'model' field should contain no more than 15 characters")
     @NotEmpty
     @Column(name = "model")
     private String model;
-
 
     @ManyToOne
     @JoinColumn(name = "range_id", nullable = false)
@@ -55,11 +52,11 @@ public class Sensor {
     @JoinColumn(name = "sensor_unit_id")
     private SensorUnit unit;
 
-    @Max(value = 40, message = "The 'location' field should have no more than 40 characters")
+    @Size(min = 40, message = "The 'location' field should have no more than 40 characters")
     @Column(name = "location")
     private String location;
 
-    @Max(value = 200, message = "The 'location' field should have no more than 200 characters")
+    @Size(max = 200, message = "The 'location' field should have no more than 200 characters")
     @Column(name = "description")
     private String description;
 }
