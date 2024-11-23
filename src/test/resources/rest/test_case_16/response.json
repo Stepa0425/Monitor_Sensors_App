@@ -1,0 +1,15 @@
+{
+  "errors": [
+    {
+      "field": "range",
+      "message": "The range: Range{1000, 14000} not exist."
+    }
+  ],
+  "name": null,
+  "model": null,
+  "description": null,
+  "location": null,
+  "type": null,
+  "unit": null,
+  "range": null
+}

@@ -1,0 +1,18 @@
+{
+  "errors": [  {
+    "field": "range",
+    "message": "The range: Range{20, 1} isn't correct."
+  },
+    {
+      "field": "range",
+      "message": "The range: Range{20, 1} not exist."
+    }
+  ],
+  "name": null,
+  "model": null,
+  "description": null,
+  "location": null,
+  "type": null,
+  "unit": null,
+  "range": null
+}

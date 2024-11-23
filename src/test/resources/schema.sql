@@ -26,7 +26,7 @@ ON sensor_units (name);
 CREATE TABLE sensors (
   id BIGINT NOT NULL AUTO_INCREMENT,
   name VARCHAR(30) NOT NULL,
-  description VARCHAR(200) NOT NULL,
+  description VARCHAR(200),
   model VARCHAR(15) NOT NULL,
   location VARCHAR(40),
   range_id BIGINT NOT NULL,

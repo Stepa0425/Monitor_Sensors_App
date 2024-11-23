@@ -1,0 +1,9 @@
+{
+  "name": "Barometer",
+  "model":"ac-23",
+  "description":"a device for measure pressure",
+  "location":"kitchen",
+  "type":"Pressure",
+  "unit":"bar",
+  "range":null
+}
