@@ -9,9 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.JoinColumn;
 
-import jakarta.validation.constraints.NotEmpty;
-
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,13 +27,9 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 30, min = 3, message = "The 'name' field should contain at least 3 and no more than 30 characters")
-    @NotEmpty
     @Column(name = "name")
     private String name;
 
-    @Size(max = 15, message = "The 'model' field should contain no more than 15 characters")
-    @NotEmpty
     @Column(name = "model")
     private String model;
 
@@ -52,11 +45,9 @@ public class Sensor {
     @JoinColumn(name = "sensor_unit_id")
     private SensorUnit unit;
 
-    @Size(min = 40, message = "The 'location' field should have no more than 40 characters")
     @Column(name = "location")
     private String location;
 
-    @Size(max = 200, message = "The 'location' field should have no more than 200 characters")
     @Column(name = "description")
     private String description;
 }

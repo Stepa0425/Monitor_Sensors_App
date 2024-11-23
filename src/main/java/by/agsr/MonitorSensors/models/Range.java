@@ -7,9 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,13 +25,9 @@ public class Range {
     @Column(name = "id")
     private Long id;
 
-    @NotNull(message = "The 'from' field cannot be empty")
-    @Positive(message = "The 'from' field must be a positive integer")
     @Column(name = "range_from")
-    private Integer range_from;
+    private Integer rangeFrom;
 
-    @NotNull(message = "The 'to' field cannot be empty")
-    @Positive(message = "The 'to' field must be a positive integer")
     @Column(name = "range_to")
-    private Integer range_to;
+    private Integer rangeTo;
 }

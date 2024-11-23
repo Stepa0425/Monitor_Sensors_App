@@ -1,5 +1,6 @@
 package by.agsr.MonitorSensors.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ public class SensorResponseDTO extends CoreResponse {
     private String location;
     private String unit;
     private String type;
-    private String range_from;
-    private String range_to;
+
+    @JsonAlias("range")
+    private RangeDTO rangeDTO;
+
     private List<ValidationErrorDTO> errors;
 }
