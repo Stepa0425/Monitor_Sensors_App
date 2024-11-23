@@ -23,4 +23,9 @@ public class RangeDTO {
     @Positive(message = "The 'to' field must be a positive integer")
     @JsonAlias("to")
     private Integer rangeTo;
+
+    @Override
+    public String toString() {
+        return "RangeDTO{" + rangeFrom + ", " + rangeTo + '}';
+    }
 }
