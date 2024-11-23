@@ -1,6 +1,5 @@
 package by.agsr.MonitorSensors.repositories;
 
-
 import by.agsr.MonitorSensors.models.SensorUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
