@@ -13,13 +13,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -182,7 +185,7 @@ public class SensorServiceImplTest {
     }
 
     @Test
-    void shouldStopUpdateWhenThrowAnyExceptionOfValidationSensorRequestDTO() {
+    void shouldStopUpdateWhenThrowAnyExceptionOfValidationSensor() {
         var sensorId = 1L;
         var sensorRequestDTO = new SensorRequestDTO();
 
@@ -196,5 +199,57 @@ public class SensorServiceImplTest {
         verify(sensorValidator, times(1)).validateSensorRequest(sensorRequestDTO);
         verifyNoInteractions(converterDTO);
         verify(sensorRepository, never()).save(any());
+    }
+
+    @Test
+    public void shouldReturnFoundSensorByName() {
+        var sensor1 = new Sensor();
+        var sensor2 = new Sensor();
+        var sensorResponse1 = new SensorResponseDTO();
+        var sensorResponse2 = new SensorResponseDTO();
+
+        sensor1.setName("Barometer");
+        sensorResponse1.setName("Barometer");
+        sensor2.setName("Thermometer");
+        sensorResponse2.setName("Thermometer");
+
+        String name = "meter";
+        List<Sensor> sensors = Arrays.asList(sensor1, sensor2);
+        when(sensorRepository.findByNameContaining(name)).thenReturn(sensors);
+        when(converterDTO.convertToSensorResponseDTO(sensor1)).thenReturn(sensorResponse1);
+        when(converterDTO.convertToSensorResponseDTO(sensor2)).thenReturn(sensorResponse2);
+
+        List<SensorResponseDTO> result = sensorService.getByName(name);
+
+        assertEquals(2, result.size());
+        verify(sensorRepository).findByNameContaining(name);
+    }
+
+    @Test
+    public void shouldReturnAllSensorsWhenEmptyName() {
+        String name = "";
+        List<SensorResponseDTO> result = sensorService.getByName(name);
+
+        assertThat(result).isEmpty();
+        verify(sensorRepository, never()).findByNameContaining(anyString());
+    }
+
+    @Test
+    public void shouldReturnAllSensorsWhenNullName() {
+        String name = null;
+        List<SensorResponseDTO> result = sensorService.getByName(name);
+
+        assertThat(result).isEmpty();
+        verify(sensorRepository, never()).findByNameContaining(anyString());
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenNotFoundByName() {
+        String name = "Nonexistent";
+        when(sensorRepository.findByNameContaining(name)).thenReturn(List.of());
+        List<SensorResponseDTO> result = sensorService.getByName(name);
+
+        assertThat(result).isEmpty();
+        verify(sensorRepository).findByNameContaining(name);
     }
 }

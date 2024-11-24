@@ -14,4 +14,6 @@ public interface SensorService {
     void deleteSensor(Long sensorId);
 
     SensorResponseDTO updateSensor(Long sensorId, SensorRequestDTO sensorRequestDTO);
+
+    List<SensorResponseDTO> getByName(String name);
 }

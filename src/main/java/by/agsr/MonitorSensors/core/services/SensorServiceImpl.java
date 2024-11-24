@@ -48,7 +48,7 @@ class SensorServiceImpl implements SensorService {
     }
 
     @Override
-    public SensorResponseDTO updateSensor(Long sensorId, SensorRequestDTO sensorRequestDTO){
+    public SensorResponseDTO updateSensor(Long sensorId, SensorRequestDTO sensorRequestDTO) {
         sensorValidator.validateExistingSensor(sensorId);
         sensorValidator.validateSensorRequest(sensorRequestDTO);
         Sensor sensor = sensorRepository.findById(sensorId).get();
@@ -64,5 +64,23 @@ class SensorServiceImpl implements SensorService {
 
         Sensor savedSensor = sensorRepository.save(sensor);
         return converterDTO.convertToSensorResponseDTO(savedSensor);
+    }
+
+    @Override
+    public List<SensorResponseDTO> getByName(String name) {
+        return isCorrectSearchValue(name)
+                ? findSensorsByName(name)
+                : getAllSensors();
+    }
+
+    private boolean isCorrectSearchValue(String value){
+        return value != null && !value.isBlank();
+    }
+
+    private List<SensorResponseDTO> findSensorsByName(String name){
+        List<Sensor> foundSensors = sensorRepository.findByNameContaining(name);
+        return foundSensors.stream()
+                .map(converterDTO::convertToSensorResponseDTO)
+                .toList();
     }
 }
