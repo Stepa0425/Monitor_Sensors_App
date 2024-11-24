@@ -2,7 +2,10 @@ package by.agsr.MonitorSensors.core.validations;
 
 import by.agsr.MonitorSensors.core.dto.RangeDTO;
 import by.agsr.MonitorSensors.core.dto.SensorRequestDTO;
-import by.agsr.MonitorSensors.core.dto.ValidationErrorDTO;
+import by.agsr.MonitorSensors.core.exceptions.SensorNotFoundException;
+import by.agsr.MonitorSensors.core.exceptions.SensorRangeNotFoundException;
+import by.agsr.MonitorSensors.core.exceptions.SensorTypeNotFoundException;
+import by.agsr.MonitorSensors.core.exceptions.SensorUnitNotFoundException;
 import by.agsr.MonitorSensors.core.repositories.RangeRepository;
 import by.agsr.MonitorSensors.core.repositories.SensorRepository;
 import by.agsr.MonitorSensors.core.repositories.SensorTypeRepository;
@@ -12,16 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SensorValidatorImpl implements SensorValidator {
-
-    @Autowired
-    private final SensorRepository sensorRepository;
 
     @Autowired
     private final SensorTypeRepository sensorTypeRepository;
@@ -32,56 +29,44 @@ class SensorValidatorImpl implements SensorValidator {
     @Autowired
     private final RangeRepository rangeRepository;
 
+    @Autowired
+    private final SensorRepository sensorRepository;
+
     @Override
-    public List<ValidationErrorDTO> validateNewSensor(SensorRequestDTO sensorRequestDTO) {
+    public void validateNewSensor(SensorRequestDTO sensorRequestDTO) {
         String type = sensorRequestDTO.getType();
         String unit = sensorRequestDTO.getUnit();
         RangeDTO range = sensorRequestDTO.getRange();
 
-        List<Optional<ValidationErrorDTO>> errors = List.of(
-                validateExistingSensorType(type),
-                validateExistingSensorUnit(unit),
-                validateCorrectRange(range),
-                validateExistingRange(range)
-        );
+        validateSensorType(type);
+        validateRange(range);
+        validateSensorUnit(unit);
+    }
 
-        return errors.stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+    private void validateSensorType(String type) {
+        if (type != null && !type.isBlank()) {
+            sensorTypeRepository.findByName(type)
+                    .orElseThrow(() -> new SensorTypeNotFoundException(type));
+        }
+    }
+
+    private void validateSensorUnit(String unit) {
+        if (unit != null && !unit.isBlank()) {
+            sensorUnitRepository.findByName(unit)
+                    .orElseThrow(() -> new SensorUnitNotFoundException(unit));
+        }
+    }
+
+    private void validateRange(RangeDTO range) {
+        if (range != null && range.getRangeFrom() != null && range.getRangeTo() != null) {
+            rangeRepository.findByRangeFromAndRangeTo(range.getRangeFrom(), range.getRangeTo())
+                    .orElseThrow(() -> new SensorRangeNotFoundException(range.getRangeFrom(), range.getRangeTo()));
+        }
     }
 
     @Override
-    public boolean isSensorExist(Long sensorId){
-        return sensorRepository.findById(sensorId).isPresent();
+    public void validateExistingSensor(Long sensorId) {
+        sensorRepository.findById(sensorId)
+                .orElseThrow(() -> new SensorNotFoundException(sensorId));
     }
-
-    private Optional<ValidationErrorDTO> validateExistingSensorType(String type) {
-        return type != null && sensorTypeRepository.findByName(type).isEmpty()
-                ? Optional.of(new ValidationErrorDTO("type", "The type: " + type + " not exist."))
-                : Optional.empty();
-    }
-
-    private Optional<ValidationErrorDTO> validateExistingSensorUnit(String unit) {
-        return unit != null && !unit.isEmpty() && sensorUnitRepository.findByName(unit).isEmpty()
-                ? Optional.of(new ValidationErrorDTO("unit", "The unit: " + unit + " not exist."))
-                : Optional.empty();
-    }
-
-    private Optional<ValidationErrorDTO> validateExistingRange(RangeDTO rangeDTO) {
-        return rangeDTO != null && rangeDTO.getRangeFrom() != null && rangeDTO.getRangeTo() != null
-                && rangeRepository.findByRangeFromAndRangeTo(rangeDTO.getRangeFrom(), rangeDTO.getRangeTo()).isEmpty()
-                ? Optional.of(new ValidationErrorDTO("range", "The range: " + rangeDTO + " not exist."))
-                : Optional.empty();
-    }
-
-    private Optional<ValidationErrorDTO> validateCorrectRange(RangeDTO rangeDTO) {
-        return rangeDTO != null
-                && rangeDTO.getRangeTo() != null
-                && rangeDTO.getRangeFrom() != null
-                && rangeDTO.getRangeFrom().compareTo(rangeDTO.getRangeTo()) >= 0
-                ? Optional.of(new ValidationErrorDTO("range", "The range: " + rangeDTO + " isn't correct."))
-                : Optional.empty();
-    }
-
 }

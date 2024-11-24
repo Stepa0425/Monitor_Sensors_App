@@ -2,13 +2,11 @@ package by.agsr.MonitorSensors.core.services;
 
 import by.agsr.MonitorSensors.core.dto.SensorRequestDTO;
 import by.agsr.MonitorSensors.core.dto.SensorResponseDTO;
-import by.agsr.MonitorSensors.core.dto.ValidationErrorDTO;
+import by.agsr.MonitorSensors.core.models.Sensor;
 import by.agsr.MonitorSensors.core.repositories.SensorRepository;
 import by.agsr.MonitorSensors.core.validations.SensorValidator;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +27,10 @@ class SensorServiceImpl implements SensorService {
 
     @Override
     public SensorResponseDTO createSensor(SensorRequestDTO sensorRequestDTO) {
-        var errors = sensorValidator.validateNewSensor(sensorRequestDTO);
-        return errors.isEmpty()
-                ? buildSuccessSensorResponse(sensorRequestDTO)
-                : buildErrorSensorResponse(errors);
-    }
+        sensorValidator.validateNewSensor(sensorRequestDTO);
 
-    private SensorResponseDTO buildErrorSensorResponse(List<ValidationErrorDTO> errors) {
-        var sensorResponseDTO = new SensorResponseDTO();
-        sensorResponseDTO.setErrors(errors);
-        return sensorResponseDTO;
-    }
-
-    private SensorResponseDTO buildSuccessSensorResponse(SensorRequestDTO sensorRequestDTO) {
-        var sensor = converterDTO.convertToSensor(sensorRequestDTO);
-        var savedSensor = sensorRepository.save(sensor);
+        Sensor sensor = converterDTO.convertToSensor(sensorRequestDTO);
+        Sensor savedSensor = sensorRepository.save(sensor);
         return converterDTO.convertToSensorResponseDTO(savedSensor);
     }
 
@@ -56,8 +43,7 @@ class SensorServiceImpl implements SensorService {
 
     @Override
     public void deleteSensor(Long sensorId) {
-        if (sensorValidator.isSensorExist(sensorId)) {
-            sensorRepository.deleteById(sensorId);
-        }
+        sensorValidator.validateExistingSensor(sensorId);
+        sensorRepository.deleteById(sensorId);
     }
 }
