@@ -252,4 +252,56 @@ public class SensorServiceImplTest {
         assertThat(result).isEmpty();
         verify(sensorRepository).findByNameContaining(name);
     }
+
+    @Test
+    public void shouldReturnFoundSensorByModel() {
+        var sensor1 = new Sensor();
+        var sensor2 = new Sensor();
+        var sensorResponse1 = new SensorResponseDTO();
+        var sensorResponse2 = new SensorResponseDTO();
+
+        sensor1.setModel("ac-23");
+        sensorResponse1.setModel("ac-23");
+        sensor2.setModel("ac-25");
+        sensorResponse2.setModel("ac-25");
+
+        String model = "ac";
+        List<Sensor> sensors = Arrays.asList(sensor1, sensor2);
+        when(sensorRepository.findByModelContaining(model)).thenReturn(sensors);
+        when(converterDTO.convertToSensorResponseDTO(sensor1)).thenReturn(sensorResponse1);
+        when(converterDTO.convertToSensorResponseDTO(sensor2)).thenReturn(sensorResponse2);
+
+        List<SensorResponseDTO> result = sensorService.getByModel(model);
+
+        assertEquals(2, result.size());
+        verify(sensorRepository).findByModelContaining(model);
+    }
+
+    @Test
+    public void shouldReturnAllSensorsWhenEmptyModel() {
+        String model = "";
+        List<SensorResponseDTO> result = sensorService.getByModel(model);
+
+        assertThat(result).isEmpty();
+        verify(sensorRepository, never()).findByModelContaining(anyString());
+    }
+
+    @Test
+    public void shouldReturnAllSensorsWhenNullModel() {
+        String model = null;
+        List<SensorResponseDTO> result = sensorService.getByModel(model);
+
+        assertThat(result).isEmpty();
+        verify(sensorRepository, never()).findByModelContaining(anyString());
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenNotFoundByModel() {
+        String model = "Nonexistent";
+        when(sensorRepository.findByModelContaining(model)).thenReturn(List.of());
+        List<SensorResponseDTO> result = sensorService.getByModel(model);
+
+        assertThat(result).isEmpty();
+        verify(sensorRepository).findByModelContaining(model);
+    }
 }

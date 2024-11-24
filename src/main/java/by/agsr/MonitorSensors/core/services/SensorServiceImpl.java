@@ -73,12 +73,26 @@ class SensorServiceImpl implements SensorService {
                 : getAllSensors();
     }
 
+    @Override
+    public List<SensorResponseDTO> getByModel(String model) {
+        return isCorrectSearchValue(model)
+                ? findSensorsByModel(model)
+                : getAllSensors();
+    }
+
     private boolean isCorrectSearchValue(String value){
         return value != null && !value.isBlank();
     }
 
     private List<SensorResponseDTO> findSensorsByName(String name){
         List<Sensor> foundSensors = sensorRepository.findByNameContaining(name);
+        return foundSensors.stream()
+                .map(converterDTO::convertToSensorResponseDTO)
+                .toList();
+    }
+
+    private List<SensorResponseDTO> findSensorsByModel(String model){
+        List<Sensor> foundSensors = sensorRepository.findByModelContaining(model);
         return foundSensors.stream()
                 .map(converterDTO::convertToSensorResponseDTO)
                 .toList();

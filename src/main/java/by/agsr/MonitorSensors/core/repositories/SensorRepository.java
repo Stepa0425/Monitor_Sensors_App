@@ -10,4 +10,6 @@ import java.util.List;
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
 
     List<Sensor> findByNameContaining(String name);
+
+    List<Sensor> findByModelContaining(String model);
 }

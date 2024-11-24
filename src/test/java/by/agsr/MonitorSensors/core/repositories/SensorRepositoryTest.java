@@ -24,22 +24,43 @@ public class SensorRepositoryTest {
     public void injectedRepositoryNotNull(){assertNotNull(sensorRepository);}
 
     @Test
-    public void shouldReturnFoundSensors() {
+    public void shouldReturnFoundSensorsByName() {
         List<Sensor> foundSensors = sensorRepository.findByNameContaining("meter");
 
         assertEquals(1, foundSensors.size());
     }
 
     @Test
-    public void shouldReturnEmptyList() {
+    public void shouldReturnByNameEmptyList() {
         List<Sensor> foundSensors = sensorRepository.findByNameContaining("Nonexistent");
 
         assertTrue(foundSensors.isEmpty());
     }
 
     @Test
-    public void shouldReturnAllSensors() {
+    public void shouldReturnByNameAllSensors() {
         List<Sensor> foundSensors = sensorRepository.findByNameContaining("");
+
+        assertEquals(1, foundSensors.size());
+    }
+
+    @Test
+    public void shouldReturnByModelFoundSensors() {
+        List<Sensor> foundSensors = sensorRepository.findByModelContaining("ac");
+
+        assertEquals(1, foundSensors.size());
+    }
+
+    @Test
+    public void shouldReturnByModelEmptyList() {
+        List<Sensor> foundSensors = sensorRepository.findByModelContaining("Nonexistent");
+
+        assertTrue(foundSensors.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnByModelAllSensors() {
+        List<Sensor> foundSensors = sensorRepository.findByModelContaining("");
 
         assertEquals(1, foundSensors.size());
     }
