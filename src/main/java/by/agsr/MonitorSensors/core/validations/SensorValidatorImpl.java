@@ -30,7 +30,7 @@ class SensorValidatorImpl implements SensorValidator {
     private final SensorRepository sensorRepository;
 
     @Override
-    public void validateNewSensor(SensorRequestDTO sensorRequestDTO) {
+    public void validateSensorRequest(SensorRequestDTO sensorRequestDTO) {
         String type = sensorRequestDTO.getType();
         String unit = sensorRequestDTO.getUnit();
         RangeDTO range = sensorRequestDTO.getRange();

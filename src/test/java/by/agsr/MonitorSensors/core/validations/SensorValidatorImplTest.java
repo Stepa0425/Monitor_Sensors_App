@@ -50,7 +50,7 @@ public class SensorValidatorImplTest {
         when(sensorTypeRepository.findByName("Temperature")).thenReturn(Optional.of(new SensorType()));
         when(sensorUnitRepository.findByName("Celsius")).thenReturn(Optional.of(new SensorUnit()));
         when(rangeRepository.findByRangeFromAndRangeTo(10, 100)).thenReturn(Optional.of(new Range()));
-        sensorValidator.validateNewSensor(sensorRequestDTO);
+        sensorValidator.validateSensorRequest(sensorRequestDTO);
 
         verify(sensorTypeRepository, times(1)).findByName("Temperature");
         verify(sensorUnitRepository, times(1)).findByName("Celsius");
@@ -63,7 +63,7 @@ public class SensorValidatorImplTest {
         sensorRequestDTO.setType("InvalidType");
         when(sensorTypeRepository.findByName("InvalidType")).thenReturn(Optional.empty());
 
-        assertThrows(SensorTypeNotFoundException.class, () -> sensorValidator.validateNewSensor(sensorRequestDTO));
+        assertThrows(SensorTypeNotFoundException.class, () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
         verify(sensorTypeRepository, times(1)).findByName("InvalidType");
     }
 
@@ -73,7 +73,7 @@ public class SensorValidatorImplTest {
         sensorRequestDTO.setUnit("InvalidUnit");
         when(sensorUnitRepository.findByName("InvalidUnit")).thenReturn(Optional.empty());
 
-        assertThrows(SensorUnitNotFoundException.class, () -> sensorValidator.validateNewSensor(sensorRequestDTO));
+        assertThrows(SensorUnitNotFoundException.class, () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
         verify(sensorUnitRepository, times(1)).findByName("InvalidUnit");
     }
 
@@ -85,7 +85,7 @@ public class SensorValidatorImplTest {
         when(rangeRepository.findByRangeFromAndRangeTo(10, 100)).thenReturn(Optional.empty());
 
         assertThrows(SensorRangeNotFoundException.class,
-                () -> sensorValidator.validateNewSensor(sensorRequestDTO));
+                () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
         verify(rangeRepository, times(1)).findByRangeFromAndRangeTo(10, 100);
     }
 
@@ -97,14 +97,14 @@ public class SensorValidatorImplTest {
         when(rangeRepository.findByRangeFromAndRangeTo(100, 10)).thenReturn(Optional.of(mock(Range.class)));
 
         assertThrows(SensorRangeIncorrectException.class,
-                () -> sensorValidator.validateNewSensor(sensorRequestDTO));
+                () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
     }
 
     @Test
     public void shouldNotValidateRangeNull() {
         var sensorRequestDTO = new SensorRequestDTO();
         sensorRequestDTO.setRange(null);
-        sensorValidator.validateNewSensor(sensorRequestDTO);
+        sensorValidator.validateSensorRequest(sensorRequestDTO);
         verifyNoInteractions(rangeRepository);
     }
 
