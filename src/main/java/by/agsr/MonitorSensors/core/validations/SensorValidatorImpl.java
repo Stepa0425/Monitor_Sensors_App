@@ -4,6 +4,7 @@ import by.agsr.MonitorSensors.core.dto.RangeDTO;
 import by.agsr.MonitorSensors.core.dto.SensorRequestDTO;
 import by.agsr.MonitorSensors.core.dto.ValidationErrorDTO;
 import by.agsr.MonitorSensors.core.repositories.RangeRepository;
+import by.agsr.MonitorSensors.core.repositories.SensorRepository;
 import by.agsr.MonitorSensors.core.repositories.SensorTypeRepository;
 import by.agsr.MonitorSensors.core.repositories.SensorUnitRepository;
 import lombok.AccessLevel;
@@ -18,6 +19,9 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SensorValidatorImpl implements SensorValidator {
+
+    @Autowired
+    private final SensorRepository sensorRepository;
 
     @Autowired
     private final SensorTypeRepository sensorTypeRepository;
@@ -45,6 +49,11 @@ class SensorValidatorImpl implements SensorValidator {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
+    }
+
+    @Override
+    public boolean isSensorExist(Long sensorId){
+        return sensorRepository.findById(sensorId).isPresent();
     }
 
     private Optional<ValidationErrorDTO> validateExistingSensorType(String type) {

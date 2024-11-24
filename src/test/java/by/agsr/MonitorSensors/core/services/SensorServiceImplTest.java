@@ -102,4 +102,24 @@ public class SensorServiceImplTest {
         verify(sensorRepository).findAll();
         verify(converterDTO, never()).convertToSensorResponseDTO(any());
     }
+
+    @Test
+    public void shouldDeleteSensorWhenSensorExists() {
+        Long sensorId = 1L;
+        when(sensorValidator.isSensorExist(sensorId)).thenReturn(true);
+        sensorService.deleteSensor(sensorId);
+
+        verify(sensorValidator).isSensorExist(sensorId);
+        verify(sensorRepository).deleteById(sensorId);
+    }
+
+    @Test
+    public void testDeleteSensor_WhenSensorDoesNotExist() {
+        Long sensorId = 2L;
+        when(sensorValidator.isSensorExist(sensorId)).thenReturn(false);
+        sensorService.deleteSensor(sensorId);
+
+        verify(sensorValidator).isSensorExist(sensorId);
+        verify(sensorRepository, never()).deleteById(sensorId);
+    }
 }

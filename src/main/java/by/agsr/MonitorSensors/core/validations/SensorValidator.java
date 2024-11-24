@@ -9,4 +9,6 @@ import java.util.List;
 public interface SensorValidator {
 
     List<ValidationErrorDTO> validateNewSensor(SensorRequestDTO sensorRequestDTO);
+
+    boolean isSensorExist(Long sensorId);
 }

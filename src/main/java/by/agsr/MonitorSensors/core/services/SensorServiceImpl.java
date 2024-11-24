@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -43,15 +44,22 @@ class SensorServiceImpl implements SensorService {
     }
 
     private SensorResponseDTO buildSuccessSensorResponse(SensorRequestDTO sensorRequestDTO) {
-        Sensor sensor = converterDTO.convertToSensor(sensorRequestDTO);
+        var sensor = converterDTO.convertToSensor(sensorRequestDTO);
         var savedSensor = sensorRepository.save(sensor);
         return converterDTO.convertToSensorResponseDTO(savedSensor);
     }
 
     @Override
-    public List<SensorResponseDTO> getAllSensors(){
+    public List<SensorResponseDTO> getAllSensors() {
         return sensorRepository.findAll().stream()
                 .map(converterDTO::convertToSensorResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public void deleteSensor(Long sensorId) {
+        if (sensorValidator.isSensorExist(sensorId)) {
+            sensorRepository.deleteById(sensorId);
+        }
     }
 }

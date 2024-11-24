@@ -9,11 +9,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -45,5 +48,13 @@ public class SensorController {
         }
     }
 
-
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteSensor(@PathVariable("id") Long sensorId) {
+        try {
+            sensorService.deleteSensor(sensorId);
+            return ResponseEntity.ok("Sensor with id:" + sensorId + " deleted successfully!");
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting sensor: " + e.getMessage(), e);
+        }
+    }
 }

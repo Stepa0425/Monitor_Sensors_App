@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -30,14 +29,14 @@ public class SensorControllerTest {
 
     @Test
     public void successCreateRequest() throws Exception {
-      executePostRequestAndCompareResults(
-              "rest/test_case_1/request.json",
-              "rest/test_case_1/response.json"
-      );
+        executePostRequestAndCompareResults(
+                "rest/test_case_1/request.json",
+                "rest/test_case_1/response.json"
+        );
     }
 
     @Test
-    public void sensorNameNull() throws Exception{
+    public void sensorNameNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_2/request.json",
                 "rest/test_case_2/response.json"
@@ -45,7 +44,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorNameNoFitSize() throws Exception{
+    public void sensorNameNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_3/request.json",
                 "rest/test_case_3/response.json"
@@ -53,7 +52,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorModelNull() throws Exception{
+    public void sensorModelNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_4/request.json",
                 "rest/test_case_4/response.json"
@@ -61,7 +60,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorModelNoFitSize() throws Exception{
+    public void sensorModelNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_5/request.json",
                 "rest/test_case_5/response.json"
@@ -69,7 +68,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorDescriptionNoFitSize() throws Exception{
+    public void sensorDescriptionNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_6/request.json",
                 "rest/test_case_6/response.json"
@@ -77,7 +76,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorLocationNoFitSize() throws Exception{
+    public void sensorLocationNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_7/request.json",
                 "rest/test_case_7/response.json"
@@ -85,7 +84,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorTypeEmpty() throws Exception{
+    public void sensorTypeEmpty() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_8/request.json",
                 "rest/test_case_8/response.json"
@@ -93,7 +92,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorRangeNull() throws Exception{
+    public void sensorRangeNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_9/request.json",
                 "rest/test_case_9/response.json"
@@ -101,7 +100,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorRangeFromFieldNull() throws Exception{
+    public void sensorRangeFromFieldNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_10/request.json",
                 "rest/test_case_10/response.json"
@@ -109,7 +108,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorRangeToFieldNull() throws Exception{
+    public void sensorRangeToFieldNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_11/request.json",
                 "rest/test_case_11/response.json"
@@ -117,15 +116,15 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorRangeFromNotPositive() throws Exception{
-      executePostWithBadRequestAndCompareResults(
-              "rest/test_case_12/request.json",
-              "rest/test_case_12/response.json"
-      );
+    public void sensorRangeFromNotPositive() throws Exception {
+        executePostWithBadRequestAndCompareResults(
+                "rest/test_case_12/request.json",
+                "rest/test_case_12/response.json"
+        );
     }
 
     @Test
-    public void sensorRangeToNotPositive() throws Exception{
+    public void sensorRangeToNotPositive() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_13/request.json",
                 "rest/test_case_13/response.json"
@@ -133,7 +132,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorUnitNotExist() throws Exception{
+    public void sensorUnitNotExist() throws Exception {
         executePostRequestAndCompareResults(
                 "rest/test_case_14/request.json",
                 "rest/test_case_14/response.json"
@@ -141,7 +140,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorTypeNotExist() throws Exception{
+    public void sensorTypeNotExist() throws Exception {
         executePostRequestAndCompareResults(
                 "rest/test_case_15/request.json",
                 "rest/test_case_15/response.json"
@@ -149,7 +148,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorRangeNotExist() throws Exception{
+    public void sensorRangeNotExist() throws Exception {
         executePostRequestAndCompareResults(
                 "rest/test_case_16/request.json",
                 "rest/test_case_16/response.json"
@@ -157,7 +156,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void sensorRangeIsNotCorrect() throws Exception{
+    public void sensorRangeIsNotCorrect() throws Exception {
         executePostRequestAndCompareResults(
                 "rest/test_case_17/request.json",
                 "rest/test_case_17/response.json"
@@ -165,7 +164,7 @@ public class SensorControllerTest {
     }
 
     @Test
-    public void getAllSensors() throws Exception{
+    public void getAllSensors() throws Exception {
         MvcResult result = mockMvc.perform(get("/agsr/monitor/sensors/"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -177,9 +176,19 @@ public class SensorControllerTest {
         assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
     }
 
+    @Test
+    public void deleteSensor() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/agsr/monitor/sensors/1"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+        assertEquals("Sensor with id:1 deleted successfully!", responseBody);
+    }
+
 
     private void executePostWithBadRequestAndCompareResults(String jsonRequestFilePath,
-                                          String jsonResponseFilePath) throws Exception{
+                                                            String jsonResponseFilePath) throws Exception {
         String jsonRequest = jsonFileReader.readJsonFromFile(jsonRequestFilePath);
         MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
                         .content(jsonRequest)
@@ -195,7 +204,7 @@ public class SensorControllerTest {
     }
 
     private void executePostRequestAndCompareResults(String jsonRequestFilePath,
-                                                     String jsonResponseFilePath) throws Exception{
+                                                     String jsonResponseFilePath) throws Exception {
         String jsonRequest = jsonFileReader.readJsonFromFile(jsonRequestFilePath);
         MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
                         .content(jsonRequest)

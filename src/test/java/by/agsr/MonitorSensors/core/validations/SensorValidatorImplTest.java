@@ -4,9 +4,11 @@ import by.agsr.MonitorSensors.core.dto.RangeDTO;
 import by.agsr.MonitorSensors.core.dto.SensorRequestDTO;
 import by.agsr.MonitorSensors.core.dto.ValidationErrorDTO;
 import by.agsr.MonitorSensors.core.models.Range;
+import by.agsr.MonitorSensors.core.models.Sensor;
 import by.agsr.MonitorSensors.core.models.SensorType;
 import by.agsr.MonitorSensors.core.models.SensorUnit;
 import by.agsr.MonitorSensors.core.repositories.RangeRepository;
+import by.agsr.MonitorSensors.core.repositories.SensorRepository;
 import by.agsr.MonitorSensors.core.repositories.SensorTypeRepository;
 import by.agsr.MonitorSensors.core.repositories.SensorUnitRepository;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -36,6 +40,9 @@ public class SensorValidatorImplTest {
 
     @Mock
     private SensorUnitRepository sensorUnitRepository;
+
+    @Mock
+    private SensorRepository sensorRepository;
 
     @Mock
     private RangeRepository rangeRepository;
@@ -163,5 +170,23 @@ public class SensorValidatorImplTest {
         List<ValidationErrorDTO> errors = sensorValidator.validateNewSensor(sensorRequestDTO);
         assertEquals(0, errors.size());
         verify(rangeRepository, never()).findByRangeFromAndRangeTo(anyInt(), anyInt());
+    }
+
+    @Test
+    public void shouldReturnTrueWhenSensorExists() {
+        Long sensorId = 1L;
+        when(sensorRepository.findById(sensorId)).thenReturn(Optional.of(new Sensor()));
+        boolean exists = sensorValidator.isSensorExist(sensorId);
+
+        assertTrue(exists);
+    }
+
+    @Test
+    public void shouldReturnFalseWhenSensorDoesNotExist() {
+        Long sensorId = 2L;
+        when(sensorRepository.findById(sensorId)).thenReturn(Optional.empty());
+        boolean exists = sensorValidator.isSensorExist(sensorId);
+
+        assertFalse(exists);
     }
 }

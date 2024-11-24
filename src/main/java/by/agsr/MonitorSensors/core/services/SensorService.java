@@ -10,4 +10,6 @@ public interface SensorService {
     SensorResponseDTO createSensor(SensorRequestDTO sensorRequestDTO);
 
     List<SensorResponseDTO> getAllSensors();
+
+    void deleteSensor(Long sensorId);
 }
