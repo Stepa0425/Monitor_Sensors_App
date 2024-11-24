@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Barometer",
+    "model": "ac-23",
+    "description": "a device for measuring atmospheric pressure",
+    "location": "kitchen",
+    "unit": "bar",
+    "type": "Pressure",
+    "range": {
+      "from": 22,
+      "to": 45
+    }
+  }
+]

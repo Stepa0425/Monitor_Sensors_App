@@ -207,6 +207,27 @@ public class SensorControllerTest {
         );
     }
 
+    @Test
+    public void getSensorsByModel() throws Exception {
+        executeGetWithOkCodeAndCompareResults("?model=ac",
+                "rest/test_case_22/response.json"
+        );
+    }
+
+    @Test
+    public void getEmptyListSensorsWhenNoFoundModel() throws Exception{
+        executeGetWithOkCodeAndCompareResults("?model=nonFoundModel",
+                "rest/test_case_23/response.json"
+        );
+    }
+
+    @Test
+    public void getAllSensorsWhenEmptyModel() throws Exception{
+        executeGetWithOkCodeAndCompareResults("?model=",
+                "rest/test_case_24/response.json"
+        );
+    }
+
 
 
     @Test

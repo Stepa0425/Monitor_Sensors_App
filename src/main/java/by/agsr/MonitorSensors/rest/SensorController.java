@@ -1,6 +1,7 @@
 package by.agsr.MonitorSensors.rest;
 
 import by.agsr.MonitorSensors.core.dto.SensorRequestDTO;
+import by.agsr.MonitorSensors.core.dto.SensorResponseDTO;
 import by.agsr.MonitorSensors.core.services.SensorService;
 import jakarta.validation.Valid;
 
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -46,14 +49,23 @@ public class SensorController {
             consumes = "application/json",
             produces = "application/json")
     public ResponseEntity<?> updateSensor(@PathVariable("id") Long sensorId,
-                                          @RequestBody @Valid SensorRequestDTO sensorRequestDTO){
+                                          @RequestBody @Valid SensorRequestDTO sensorRequestDTO) {
         var updatedSensor = sensorService.updateSensor(sensorId, sensorRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedSensor);
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<?> findSensorsByName(@RequestParam(value = "name" ,required = false) String sensorName){
-        var foundSensors = sensorService.getByName(sensorName);
+    public ResponseEntity<?> findSensorsByName(@RequestParam(value = "name", required = false) String sensorName,
+                                               @RequestParam(value = "model", required = false) String sensorModel) {
+        List<SensorResponseDTO> foundSensors;
+
+        if (sensorName != null && !sensorName.isBlank()) {
+            foundSensors = sensorService.getByName(sensorName);
+        } else if (sensorModel != null && !sensorModel.isBlank()) {
+            foundSensors = sensorService.getByModel(sensorModel);
+        } else {
+            foundSensors = sensorService.getAllSensors();
+        }
         return ResponseEntity.status(HttpStatus.OK).body(foundSensors);
     }
 }

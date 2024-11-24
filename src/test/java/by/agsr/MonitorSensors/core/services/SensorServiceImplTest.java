@@ -213,7 +213,7 @@ public class SensorServiceImplTest {
         sensor2.setName("Thermometer");
         sensorResponse2.setName("Thermometer");
 
-        String name = "meter";
+        var name = "meter";
         List<Sensor> sensors = Arrays.asList(sensor1, sensor2);
         when(sensorRepository.findByNameContaining(name)).thenReturn(sensors);
         when(converterDTO.convertToSensorResponseDTO(sensor1)).thenReturn(sensorResponse1);
@@ -227,7 +227,7 @@ public class SensorServiceImplTest {
 
     @Test
     public void shouldReturnAllSensorsWhenEmptyName() {
-        String name = "";
+        var name = "";
         List<SensorResponseDTO> result = sensorService.getByName(name);
 
         assertThat(result).isEmpty();
@@ -245,7 +245,7 @@ public class SensorServiceImplTest {
 
     @Test
     public void shouldReturnEmptyListWhenNotFoundByName() {
-        String name = "Nonexistent";
+        var name = "Nonexistent";
         when(sensorRepository.findByNameContaining(name)).thenReturn(List.of());
         List<SensorResponseDTO> result = sensorService.getByName(name);
 
@@ -265,7 +265,7 @@ public class SensorServiceImplTest {
         sensor2.setModel("ac-25");
         sensorResponse2.setModel("ac-25");
 
-        String model = "ac";
+        var model = "ac";
         List<Sensor> sensors = Arrays.asList(sensor1, sensor2);
         when(sensorRepository.findByModelContaining(model)).thenReturn(sensors);
         when(converterDTO.convertToSensorResponseDTO(sensor1)).thenReturn(sensorResponse1);
@@ -279,7 +279,7 @@ public class SensorServiceImplTest {
 
     @Test
     public void shouldReturnAllSensorsWhenEmptyModel() {
-        String model = "";
+        var model = "";
         List<SensorResponseDTO> result = sensorService.getByModel(model);
 
         assertThat(result).isEmpty();
@@ -297,7 +297,7 @@ public class SensorServiceImplTest {
 
     @Test
     public void shouldReturnEmptyListWhenNotFoundByModel() {
-        String model = "Nonexistent";
+        var model = "Nonexistent";
         when(sensorRepository.findByModelContaining(model)).thenReturn(List.of());
         List<SensorResponseDTO> result = sensorService.getByModel(model);
 
