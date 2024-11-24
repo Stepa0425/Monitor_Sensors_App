@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,6 +32,7 @@ public class SensorControllerTest {
     private JsonFileReader jsonFileReader;
 
     @Test
+    @Transactional
     public void successCreateRequest() throws Exception {
         String jsonRequest = jsonFileReader.readJsonFromFile("rest/test_case_1/request.json");
         MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
@@ -179,18 +181,36 @@ public class SensorControllerTest {
 
     @Test
     public void getAllSensors() throws Exception {
-        MvcResult result = mockMvc.perform(get("/agsr/monitor/sensors/"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String responseBodyContent = result.getResponse().getContentAsString();
-        String jsonResponse = jsonFileReader.readJsonFromFile("rest/test_case_18/response.json");
-
-        ObjectMapper mapper = new ObjectMapper();
-        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
+        executeGetWithOkCodeAndCompareResults("/",
+                "rest/test_case_18/response.json"
+        );
     }
 
     @Test
+    public void getSensorsByName() throws Exception {
+        executeGetWithOkCodeAndCompareResults("?name=meter",
+                "rest/test_case_19/response.json"
+        );
+    }
+
+    @Test
+    public void getEmptyListSensorsWhenNoFoundName() throws Exception{
+        executeGetWithOkCodeAndCompareResults("?name=nonFoundName",
+                "rest/test_case_20/response.json"
+        );
+    }
+
+    @Test
+    public void getAllSensorsWhenEmptyName() throws Exception{
+        executeGetWithOkCodeAndCompareResults("?name=",
+                "rest/test_case_21/response.json"
+        );
+    }
+
+
+
+    @Test
+    @Transactional
     public void deleteSensor() throws Exception {
         MvcResult result = mockMvc.perform(delete("/agsr/monitor/sensors/1"))
                 .andExpect(status().isNoContent())
@@ -198,6 +218,19 @@ public class SensorControllerTest {
 
         String responseBody = result.getResponse().getContentAsString();
         assertEquals("", responseBody);
+    }
+
+    private void executeGetWithOkCodeAndCompareResults(String url,
+                                                       String jsonResponseFilePath) throws Exception {
+        MvcResult result = mockMvc.perform(get("/agsr/monitor/sensors" + url))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBodyContent = result.getResponse().getContentAsString();
+        String jsonResponse = jsonFileReader.readJsonFromFile(jsonResponseFilePath);
+
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
     }
 
     private void executePostWithBadRequestAndCompareResults(String jsonRequestFilePath,
