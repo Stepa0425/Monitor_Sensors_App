@@ -62,7 +62,10 @@ public class ConverterDTO {
         sensorResponseDTO.setDescription(sensor.getDescription());
         sensorResponseDTO.setLocation(sensor.getLocation());
         sensorResponseDTO.setType(sensor.getType().getName());
-        sensorResponseDTO.setUnit(sensor.getUnit().getName());
+
+        if (sensor.getUnit() != null) {
+            sensorResponseDTO.setUnit(sensor.getUnit().getName());
+        }
         sensorResponseDTO.setRange(rangeDTO);
 
         return sensorResponseDTO;
