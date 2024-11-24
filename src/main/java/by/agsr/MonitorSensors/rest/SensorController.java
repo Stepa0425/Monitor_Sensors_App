@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,18 +32,20 @@ public class SensorController {
     @PostMapping(path = "/",
             consumes = "application/json",
             produces = "application/json")
-    public SensorResponseDTO createSensor(@RequestBody @Valid SensorRequestDTO sensorRequestDTO) {
+    public ResponseEntity<?> createSensor(@RequestBody @Valid SensorRequestDTO sensorRequestDTO) {
         try {
-            return sensorService.createSensor(sensorRequestDTO);
+            SensorResponseDTO createdSensor = sensorService.createSensor(sensorRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSensor);
         } catch (Exception e) {
             throw new RuntimeException("Error creating new sensor: " + e.getMessage(), e);
         }
     }
 
     @GetMapping(path = "/", produces = "application/json")
-    public List<SensorResponseDTO> getAllSensors() {
+    public ResponseEntity<?> getAllSensors() {
         try {
-            return sensorService.getAllSensors();
+            List<SensorResponseDTO> sensors = sensorService.getAllSensors();
+            return ResponseEntity.ok().body(sensors);
         } catch (Exception e) {
             throw new RuntimeException("Error get all sensors: " + e.getMessage(), e);
         }

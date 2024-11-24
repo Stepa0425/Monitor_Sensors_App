@@ -5,18 +5,16 @@ import by.agsr.MonitorSensors.core.dto.SensorResponseDTO;
 import by.agsr.MonitorSensors.core.dto.ValidationErrorDTO;
 import by.agsr.MonitorSensors.core.repositories.SensorRepository;
 import by.agsr.MonitorSensors.core.validations.SensorValidator;
-import by.agsr.MonitorSensors.core.models.Sensor;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-@Component
+@Service
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SensorServiceImpl implements SensorService {
 

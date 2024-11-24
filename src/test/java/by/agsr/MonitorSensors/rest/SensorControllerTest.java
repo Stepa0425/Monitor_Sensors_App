@@ -209,7 +209,7 @@ public class SensorControllerTest {
         MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
                         .content(jsonRequest)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String responseBodyContent = result.getResponse().getContentAsString();
