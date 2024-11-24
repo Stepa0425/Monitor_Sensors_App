@@ -7,6 +7,6 @@
   "unit":"bar",
   "range":{
     "from": 20,
-    "to": 1
+    "to": 10
   }
 }

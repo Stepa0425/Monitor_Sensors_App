@@ -2,10 +2,7 @@ package by.agsr.MonitorSensors.core.validations;
 
 import by.agsr.MonitorSensors.core.dto.RangeDTO;
 import by.agsr.MonitorSensors.core.dto.SensorRequestDTO;
-import by.agsr.MonitorSensors.core.exceptions.SensorNotFoundException;
-import by.agsr.MonitorSensors.core.exceptions.SensorRangeNotFoundException;
-import by.agsr.MonitorSensors.core.exceptions.SensorTypeNotFoundException;
-import by.agsr.MonitorSensors.core.exceptions.SensorUnitNotFoundException;
+import by.agsr.MonitorSensors.core.exceptions.*;
 import by.agsr.MonitorSensors.core.models.Range;
 import by.agsr.MonitorSensors.core.models.Sensor;
 import by.agsr.MonitorSensors.core.models.SensorType;
@@ -90,6 +87,17 @@ public class SensorValidatorImplTest {
         assertThrows(SensorRangeNotFoundException.class,
                 () -> sensorValidator.validateNewSensor(sensorRequestDTO));
         verify(rangeRepository, times(1)).findByRangeFromAndRangeTo(10, 100);
+    }
+
+    @Test
+    public void shouldThrowRangeIncorrectException() {
+        var sensorRequestDTO = new SensorRequestDTO();
+        var range = new RangeDTO(100, 10);
+        sensorRequestDTO.setRange(range);
+        when(rangeRepository.findByRangeFromAndRangeTo(100, 10)).thenReturn(Optional.of(mock(Range.class)));
+
+        assertThrows(SensorRangeIncorrectException.class,
+                () -> sensorValidator.validateNewSensor(sensorRequestDTO));
     }
 
     @Test

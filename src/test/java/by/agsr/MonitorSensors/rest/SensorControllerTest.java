@@ -13,8 +13,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.org.webcompere.modelassert.json.JsonAssertions.assertJson;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -29,10 +32,21 @@ public class SensorControllerTest {
 
     @Test
     public void successCreateRequest() throws Exception {
-        executePostRequestAndCompareResults(
-                "rest/test_case_1/request.json",
-                "rest/test_case_1/response.json"
-        );
+        String jsonRequest = jsonFileReader.readJsonFromFile("rest/test_case_1/request.json");
+        MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
+                        .content(jsonRequest)
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String responseBodyContent = result.getResponse().getContentAsString();
+        String jsonResponse = jsonFileReader.readJsonFromFile("rest/test_case_1/response.json");
+
+        assertJson(responseBodyContent)
+                .where()
+                .keysInAnyOrder()
+                .arrayInAnyOrder()
+                .isEqualTo(jsonResponse);
     }
 
     @Test
@@ -133,7 +147,7 @@ public class SensorControllerTest {
 
     @Test
     public void sensorUnitNotExist() throws Exception {
-        executePostRequestAndCompareResults(
+        executePostWithBadRequestAndCompareResults(
                 "rest/test_case_14/request.json",
                 "rest/test_case_14/response.json"
         );
@@ -141,7 +155,7 @@ public class SensorControllerTest {
 
     @Test
     public void sensorTypeNotExist() throws Exception {
-        executePostRequestAndCompareResults(
+        executePostWithBadRequestAndCompareResults(
                 "rest/test_case_15/request.json",
                 "rest/test_case_15/response.json"
         );
@@ -149,7 +163,7 @@ public class SensorControllerTest {
 
     @Test
     public void sensorRangeNotExist() throws Exception {
-        executePostRequestAndCompareResults(
+        executePostWithBadRequestAndCompareResults(
                 "rest/test_case_16/request.json",
                 "rest/test_case_16/response.json"
         );
@@ -157,7 +171,7 @@ public class SensorControllerTest {
 
     @Test
     public void sensorRangeIsNotCorrect() throws Exception {
-        executePostRequestAndCompareResults(
+        executePostWithBadRequestAndCompareResults(
                 "rest/test_case_17/request.json",
                 "rest/test_case_17/response.json"
         );
@@ -179,13 +193,12 @@ public class SensorControllerTest {
     @Test
     public void deleteSensor() throws Exception {
         MvcResult result = mockMvc.perform(delete("/agsr/monitor/sensors/1"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
-        assertEquals("Sensor with id:1 deleted successfully!", responseBody);
+        assertEquals("", responseBody);
     }
-
 
     private void executePostWithBadRequestAndCompareResults(String jsonRequestFilePath,
                                                             String jsonResponseFilePath) throws Exception {
@@ -193,30 +206,16 @@ public class SensorControllerTest {
         MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
                         .content(jsonRequest)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
         String responseBodyContent = result.getResponse().getContentAsString();
         String jsonResponse = jsonFileReader.readJsonFromFile(jsonResponseFilePath);
 
-        ObjectMapper mapper = new ObjectMapper();
-        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
+        assertJson(responseBodyContent)
+                .where()
+                .keysInAnyOrder()
+                .arrayInAnyOrder()
+                .isEqualTo(jsonResponse);
     }
-
-    private void executePostRequestAndCompareResults(String jsonRequestFilePath,
-                                                     String jsonResponseFilePath) throws Exception {
-        String jsonRequest = jsonFileReader.readJsonFromFile(jsonRequestFilePath);
-        MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
-                        .content(jsonRequest)
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String responseBodyContent = result.getResponse().getContentAsString();
-        String jsonResponse = jsonFileReader.readJsonFromFile(jsonResponseFilePath);
-
-        ObjectMapper mapper = new ObjectMapper();
-        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
-    }
-
 }

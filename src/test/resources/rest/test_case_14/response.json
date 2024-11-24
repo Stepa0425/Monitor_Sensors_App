@@ -1,15 +1,4 @@
 {
-  "errors": [
-    {
-      "field": "unit",
-      "message": "The unit: barc not exist."
-    }
-  ],
-  "name": null,
-  "model": null,
-  "description": null,
-  "location": null,
-  "type": null,
-  "unit": null,
-  "range": null
+  "field": "unit",
+  "message": "Sensor unit with name: barc not found."
 }

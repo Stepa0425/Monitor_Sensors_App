@@ -1,6 +1,5 @@
 [
   {
-    "errors": null,
     "name": "Barometer",
     "model": "ac-23",
     "description": "a device for measuring atmospheric pressure",
