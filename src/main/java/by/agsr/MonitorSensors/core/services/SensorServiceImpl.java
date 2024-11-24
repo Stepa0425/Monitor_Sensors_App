@@ -47,4 +47,11 @@ class SensorServiceImpl implements SensorService {
         var savedSensor = sensorRepository.save(sensor);
         return converterDTO.convertToSensorResponseDTO(savedSensor);
     }
+
+    @Override
+    public List<SensorResponseDTO> getAllSensors(){
+        return sensorRepository.findAll().stream()
+                .map(converterDTO::convertToSensorResponseDTO)
+                .toList();
+    }
 }

@@ -76,4 +76,30 @@ public class SensorServiceImplTest {
         assertEquals("Name is required", sensorResponseDTO.getErrors().get(0).getMessage());
         verify(sensorRepository, never()).save(any(Sensor.class));
     }
+
+
+    @Test
+    public void shouldReturnsListOfSensors() {
+        Sensor sensor = new Sensor();
+        SensorResponseDTO sensorResponseDTO = new SensorResponseDTO();
+        when(sensorRepository.findAll()).thenReturn(List.of(sensor));
+        when(converterDTO.convertToSensorResponseDTO(sensor)).thenReturn(sensorResponseDTO);
+
+        List<SensorResponseDTO> result = sensorService.getAllSensors();
+
+        assertEquals(1, result.size());
+        assertEquals(sensorResponseDTO, result.get(0));
+        verify(sensorRepository).findAll();
+        verify(converterDTO).convertToSensorResponseDTO(sensor);
+    }
+
+    @Test
+    public void shouldReturnsEmptyList() {
+        when(sensorRepository.findAll()).thenReturn(List.of());
+        List<SensorResponseDTO> result = sensorService.getAllSensors();
+        assertEquals(0, result.size());
+
+        verify(sensorRepository).findAll();
+        verify(converterDTO, never()).convertToSensorResponseDTO(any());
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -162,6 +163,20 @@ public class SensorControllerTest {
                 "rest/test_case_17/response.json"
         );
     }
+
+    @Test
+    public void getAllSensors() throws Exception{
+        MvcResult result = mockMvc.perform(get("/agsr/monitor/sensors/"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBodyContent = result.getResponse().getContentAsString();
+        String jsonResponse = jsonFileReader.readJsonFromFile("rest/test_case_18/response.json");
+
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
+    }
+
 
     private void executePostWithBadRequestAndCompareResults(String jsonRequestFilePath,
                                           String jsonResponseFilePath) throws Exception{
