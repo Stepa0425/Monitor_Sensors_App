@@ -1,15 +1,16 @@
 package by.agsr.MonitorSensors.core.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ValidationErrorDTO {
+public class ValidationErrorDTO extends ErrorDTO {
+
     private String field;
-    private String message;
+
+    public ValidationErrorDTO(String field, String message) {
+        this.field = field;
+        super.setMessage(message);
+    }
 }
