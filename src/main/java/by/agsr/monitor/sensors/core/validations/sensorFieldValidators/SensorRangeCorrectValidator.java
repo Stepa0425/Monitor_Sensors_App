@@ -1,4 +1,4 @@
-package by.agsr.monitor.sensors.core.validations;
+package by.agsr.monitor.sensors.core.validations.sensorFieldValidators;
 
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException;
