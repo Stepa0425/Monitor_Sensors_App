@@ -28,7 +28,7 @@ public class SensorTypeExistValidatorTest {
     private SensorTypeRepository sensorTypeRepository;
 
     @Test
-    public void shouldReturnSensorTypeSuccess() {
+    public void shouldValidateSensorTypeSuccess() {
         var name = "Sensor type";
         when(sensorTypeRepository.findByName(name)).thenReturn(Optional.of(mock(SensorType.class)));
         sensorTypeExistValidator.validateExistSensorType(name);

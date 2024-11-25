@@ -3,8 +3,6 @@ package by.agsr.monitor.sensors.core.validations;
 import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException;
-import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
-import by.agsr.monitor.sensors.core.repositories.RangeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +17,13 @@ class SensorRequestValidatorImpl implements SensorRequestValidator {
     private final SensorUnitExistValidator sensorUnitExistValidator;
 
     @Autowired
-    private final RangeRepository rangeRepository;
+    private final SensorRangeExistValidator sensorRangeExistValidator;
 
     @Autowired
     private final SensorExistValidator sensorExistValidator;
 
     @Autowired
     private final SensorTypeExistValidator sensorTypeExistValidator;
-
 
     @Override
     public void validateSensorRequest(SensorRequestDTO sensorRequestDTO) {
@@ -49,10 +46,7 @@ class SensorRequestValidatorImpl implements SensorRequestValidator {
     }
 
     private void validateExistRange(RangeDTO range) {
-        if (range != null && range.getRangeFrom() != null && range.getRangeTo() != null) {
-            rangeRepository.findByRangeFromAndRangeTo(range.getRangeFrom(), range.getRangeTo())
-                    .orElseThrow(() -> new SensorRangeNotFoundException(range.getRangeFrom(), range.getRangeTo()));
-        }
+        sensorRangeExistValidator.validateExistRange(range);
     }
 
     private void validateCorrectRange(RangeDTO range) {

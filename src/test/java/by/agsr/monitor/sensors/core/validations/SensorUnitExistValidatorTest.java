@@ -29,7 +29,7 @@ public class SensorUnitExistValidatorTest {
     private SensorUnitRepository sensorUnitRepository;
 
     @Test
-    public void shouldReturnSensorUnitSuccess() {
+    public void shouldValidateSensorUnitSuccess() {
         var name = "Sensor unit";
         when(sensorUnitRepository.findByName(name)).thenReturn(Optional.of(mock(SensorUnit.class)));
         sensorUnitExistValidator.validateExistSensorUnit(name);
