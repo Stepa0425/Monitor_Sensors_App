@@ -8,9 +8,7 @@ import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorUnitNotFoundException;
 import by.agsr.monitor.sensors.core.models.Range;
-import by.agsr.monitor.sensors.core.models.SensorUnit;
 import by.agsr.monitor.sensors.core.repositories.RangeRepository;
-import by.agsr.monitor.sensors.core.repositories.SensorUnitRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,7 +34,7 @@ public class SensorRequestValidatorImplTest {
     private SensorRequestValidatorImpl sensorValidator;
 
     @Mock
-    private SensorUnitRepository sensorUnitRepository;
+    private SensorUnitExistValidator sensorUnitExistValidator;
 
     @Mock
     private RangeRepository rangeRepository;
@@ -52,41 +50,45 @@ public class SensorRequestValidatorImplTest {
         var sensorRequestDTO = new SensorRequestDTO();
         var typeName = "Temperature";
         sensorRequestDTO.setType(typeName);
-        sensorRequestDTO.setUnit("Celsius");
+        var unitName = "Celsius";
+        sensorRequestDTO.setUnit(unitName);
         RangeDTO range = new RangeDTO(10, 100);
         sensorRequestDTO.setRange(range);
 
         doNothing().when(sensorTypeExistValidator).validateExistSensorType(typeName);
-        when(sensorUnitRepository.findByName("Celsius")).thenReturn(Optional.of(new SensorUnit()));
+        doNothing().when(sensorUnitExistValidator).validateExistSensorUnit(unitName);
         when(rangeRepository.findByRangeFromAndRangeTo(10, 100)).thenReturn(Optional.of(new Range()));
         sensorValidator.validateSensorRequest(sensorRequestDTO);
 
         verify(sensorTypeExistValidator, times(1)).validateExistSensorType(typeName);
-        verify(sensorUnitRepository, times(1)).findByName("Celsius");
+        verify(sensorUnitExistValidator, times(1)).validateExistSensorUnit(unitName);
         verify(rangeRepository, times(1)).findByRangeFromAndRangeTo(10, 100);
     }
 
     @Test
     public void shouldThrowSensorTypeNotFoundException() {
         var sensorRequestDTO = new SensorRequestDTO();
-        var typeName = "InvalidType";
+        var typeName = "NonExistType";
         sensorRequestDTO.setType(typeName);
         doThrow(new SensorTypeNotFoundException(typeName))
                 .when(sensorTypeExistValidator).validateExistSensorType(typeName);
 
         var exception = assertThrows(SensorTypeNotFoundException.class,
                 () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
-        assertEquals("Sensor type with name: InvalidType not found.", exception.getMessage());
+        assertEquals("Sensor type with name: NonExistType not found.", exception.getMessage());
     }
 
     @Test
     public void shouldThrowSensorUnitNotFoundException() {
         var sensorRequestDTO = new SensorRequestDTO();
-        sensorRequestDTO.setUnit("InvalidUnit");
-        when(sensorUnitRepository.findByName("InvalidUnit")).thenReturn(Optional.empty());
+        var unitName = "NonExistUnit";
+        sensorRequestDTO.setUnit(unitName);
+        doThrow(new SensorUnitNotFoundException(unitName))
+                .when(sensorUnitExistValidator).validateExistSensorUnit(unitName);
 
-        assertThrows(SensorUnitNotFoundException.class, () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
-        verify(sensorUnitRepository, times(1)).findByName("InvalidUnit");
+        var exception = assertThrows(SensorUnitNotFoundException.class,
+                () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
+        assertEquals("Sensor unit with name: NonExistUnit not found.", exception.getMessage());
     }
 
     @Test
