@@ -8,11 +8,8 @@ import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorUnitNotFoundException;
 import by.agsr.monitor.sensors.core.models.Range;
-import by.agsr.monitor.sensors.core.models.SensorType;
 import by.agsr.monitor.sensors.core.models.SensorUnit;
 import by.agsr.monitor.sensors.core.repositories.RangeRepository;
-import by.agsr.monitor.sensors.core.repositories.SensorRepository;
-import by.agsr.monitor.sensors.core.repositories.SensorTypeRepository;
 import by.agsr.monitor.sensors.core.repositories.SensorUnitRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,42 +21,47 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class SensorRequestValidatorImplTest {
 
-    @InjectMocks private SensorRequestValidatorImpl sensorValidator;
+    @InjectMocks
+    private SensorRequestValidatorImpl sensorValidator;
 
-    @Mock private SensorTypeRepository sensorTypeRepository;
+    @Mock
+    private SensorUnitRepository sensorUnitRepository;
 
-    @Mock private SensorUnitRepository sensorUnitRepository;
+    @Mock
+    private RangeRepository rangeRepository;
 
-    @Mock private SensorRepository sensorRepository;
+    @Mock
+    private SensorExistValidator sensorExistValidator;
 
-    @Mock private RangeRepository rangeRepository;
-
-    @Mock private SensorExistValidator sensorExistValidator;
+    @Mock
+    private SensorTypeExistValidator sensorTypeExistValidator;
 
     @Test
     public void shouldValidateNewSensorWithoutException() {
         var sensorRequestDTO = new SensorRequestDTO();
-        sensorRequestDTO.setType("Temperature");
+        var typeName = "Temperature";
+        sensorRequestDTO.setType(typeName);
         sensorRequestDTO.setUnit("Celsius");
         RangeDTO range = new RangeDTO(10, 100);
         sensorRequestDTO.setRange(range);
 
-        when(sensorTypeRepository.findByName("Temperature")).thenReturn(Optional.of(new SensorType()));
+        doNothing().when(sensorTypeExistValidator).validateExistSensorType(typeName);
         when(sensorUnitRepository.findByName("Celsius")).thenReturn(Optional.of(new SensorUnit()));
         when(rangeRepository.findByRangeFromAndRangeTo(10, 100)).thenReturn(Optional.of(new Range()));
         sensorValidator.validateSensorRequest(sensorRequestDTO);
 
-        verify(sensorTypeRepository, times(1)).findByName("Temperature");
+        verify(sensorTypeExistValidator, times(1)).validateExistSensorType(typeName);
         verify(sensorUnitRepository, times(1)).findByName("Celsius");
         verify(rangeRepository, times(1)).findByRangeFromAndRangeTo(10, 100);
     }
@@ -67,11 +69,14 @@ public class SensorRequestValidatorImplTest {
     @Test
     public void shouldThrowSensorTypeNotFoundException() {
         var sensorRequestDTO = new SensorRequestDTO();
-        sensorRequestDTO.setType("InvalidType");
-        when(sensorTypeRepository.findByName("InvalidType")).thenReturn(Optional.empty());
+        var typeName = "InvalidType";
+        sensorRequestDTO.setType(typeName);
+        doThrow(new SensorTypeNotFoundException(typeName))
+                .when(sensorTypeExistValidator).validateExistSensorType(typeName);
 
-        assertThrows(SensorTypeNotFoundException.class, () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
-        verify(sensorTypeRepository, times(1)).findByName("InvalidType");
+        var exception = assertThrows(SensorTypeNotFoundException.class,
+                () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
+        assertEquals("Sensor type with name: InvalidType not found.", exception.getMessage());
     }
 
     @Test

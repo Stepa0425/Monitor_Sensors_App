@@ -4,11 +4,8 @@ import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
-import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorUnitNotFoundException;
 import by.agsr.monitor.sensors.core.repositories.RangeRepository;
-import by.agsr.monitor.sensors.core.repositories.SensorRepository;
-import by.agsr.monitor.sensors.core.repositories.SensorTypeRepository;
 import by.agsr.monitor.sensors.core.repositories.SensorUnitRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +18,16 @@ import org.springframework.stereotype.Component;
 class SensorRequestValidatorImpl implements SensorRequestValidator {
 
     @Autowired
-    private final SensorTypeRepository sensorTypeRepository;
-
-    @Autowired
     private final SensorUnitRepository sensorUnitRepository;
 
     @Autowired
     private final RangeRepository rangeRepository;
 
     @Autowired
-    private final SensorRepository sensorRepository;
+    private final SensorExistValidator sensorExistValidator;
 
     @Autowired
-    private final SensorExistValidator sensorExistValidator;
+    private final SensorTypeExistValidator sensorTypeExistValidator;
 
 
 
@@ -50,10 +44,7 @@ class SensorRequestValidatorImpl implements SensorRequestValidator {
     }
 
     private void validateExistSensorType(String type) {
-        if (type != null && !type.isBlank()) {
-            sensorTypeRepository.findByName(type)
-                    .orElseThrow(() -> new SensorTypeNotFoundException(type));
-        }
+      sensorTypeExistValidator.validateExistSensorType(type);
     }
 
     private void validateExistSensorUnit(String unit) {
