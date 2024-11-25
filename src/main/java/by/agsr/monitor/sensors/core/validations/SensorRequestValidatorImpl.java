@@ -2,7 +2,6 @@ package by.agsr.monitor.sensors.core.validations;
 
 import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
-import by.agsr.monitor.sensors.core.api.exceptions.SensorNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-class SensorValidatorImpl implements SensorValidator {
+class SensorRequestValidatorImpl implements SensorRequestValidator {
 
     @Autowired
     private final SensorTypeRepository sensorTypeRepository;
@@ -32,6 +31,11 @@ class SensorValidatorImpl implements SensorValidator {
 
     @Autowired
     private final SensorRepository sensorRepository;
+
+    @Autowired
+    private final SensorExistValidator sensorExistValidator;
+
+
 
     @Override
     public void validateSensorRequest(SensorRequestDTO sensorRequestDTO) {
@@ -66,18 +70,17 @@ class SensorValidatorImpl implements SensorValidator {
         }
     }
 
-    private void validateCorrectRange(RangeDTO range){
-        if(range != null
+    private void validateCorrectRange(RangeDTO range) {
+        if (range != null
                 && range.getRangeFrom() != null
                 && range.getRangeTo() != null
-                && range.getRangeFrom().compareTo(range.getRangeTo()) >= 0){
+                && range.getRangeFrom().compareTo(range.getRangeTo()) >= 0) {
             throw new SensorRangeIncorrectException(range.getRangeFrom(), range.getRangeTo());
         }
     }
 
     @Override
     public void validateExistingSensor(Long sensorId) {
-        sensorRepository.findById(sensorId)
-                .orElseThrow(() -> new SensorNotFoundException(sensorId));
+        sensorExistValidator.validateExistingSensor(sensorId);
     }
 }

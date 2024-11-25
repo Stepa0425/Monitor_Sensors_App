@@ -4,7 +4,7 @@ import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorResponseDTO;
 import by.agsr.monitor.sensors.core.models.Sensor;
 import by.agsr.monitor.sensors.core.repositories.SensorRepository;
-import by.agsr.monitor.sensors.core.validations.SensorValidator;
+import by.agsr.monitor.sensors.core.validations.SensorRequestValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class SensorServiceImpl implements SensorService {
     private final ConverterDTO converterDTO;
 
     @Autowired
-    private final SensorValidator sensorValidator;
+    private final SensorRequestValidator sensorValidator;
 
     @Override
     public SensorResponseDTO createSensor(SensorRequestDTO sensorRequestDTO) {

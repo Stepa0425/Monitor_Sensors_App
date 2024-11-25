@@ -8,7 +8,6 @@ import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorUnitNotFoundException;
 import by.agsr.monitor.sensors.core.models.Range;
-import by.agsr.monitor.sensors.core.models.Sensor;
 import by.agsr.monitor.sensors.core.models.SensorType;
 import by.agsr.monitor.sensors.core.models.SensorUnit;
 import by.agsr.monitor.sensors.core.repositories.RangeRepository;
@@ -23,7 +22,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -31,9 +32,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-public class SensorValidatorImplTest {
+public class SensorRequestValidatorImplTest {
 
-    @InjectMocks private SensorValidatorImpl sensorValidator;
+    @InjectMocks private SensorRequestValidatorImpl sensorValidator;
 
     @Mock private SensorTypeRepository sensorTypeRepository;
 
@@ -42,6 +43,8 @@ public class SensorValidatorImplTest {
     @Mock private SensorRepository sensorRepository;
 
     @Mock private RangeRepository rangeRepository;
+
+    @Mock private SensorExistValidator sensorExistValidator;
 
     @Test
     public void shouldValidateNewSensorWithoutException() {
@@ -115,19 +118,17 @@ public class SensorValidatorImplTest {
     @Test
     public void shouldSuccessValidateExistSensor() {
         var validSensorId = 1L;
-        when(sensorRepository.findById(validSensorId)).thenReturn(Optional.of(mock(Sensor.class)));
         sensorValidator.validateExistingSensor(validSensorId);
-
-        verify(sensorRepository, times(1)).findById(validSensorId);
+        verify(sensorExistValidator, times(1)).validateExistingSensor(validSensorId);
     }
 
     @Test
     public void shouldThrowExceptionWhenSensorDoesNotExist() {
         var invalidSensorId = 999L;
-        when(sensorRepository.findById(invalidSensorId)).thenReturn(Optional.empty());
-        assertThrows(SensorNotFoundException.class,
+        doThrow(new SensorNotFoundException(invalidSensorId))
+                .when(sensorExistValidator).validateExistingSensor(invalidSensorId);
+        var exception = assertThrows(SensorNotFoundException.class,
                 () -> sensorValidator.validateExistingSensor(invalidSensorId));
-
-        verify(sensorRepository, times(1)).findById(invalidSensorId);
+        assertEquals("Sensor with id: 999 not found.", exception.getMessage());
     }
 }
