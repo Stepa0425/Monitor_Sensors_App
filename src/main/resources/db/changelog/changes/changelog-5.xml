@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+    <changeSet author = "StepanKarapetyan" id = "10">
+        <sql>
+            INSERT INTO ranges (range_from, range_to)
+            VALUES (20, 50),
+            (12,19),
+            (15,20),
+            (22, 45),
+            (20, 10);
+
+        </sql>
+    </changeSet>
+
+    <changeSet author = "StepanKarapetyan" id = "11">
+        <sql>
+            INSERT INTO sensor_types(name)
+            VALUES  ('Pressure'),
+            ('Voltage'),
+            ('Temperature'),
+            ('Humidity');
+        </sql>
+    </changeSet>
+
+    <changeSet author = "StepanKarapetyan" id = "12">
+        <sql>
+            INSERT INTO sensor_units(name)
+            VALUES  ('bar'),
+            ('voltage'),
+            ('°С'),
+            ('%');
+        </sql>
+    </changeSet>
+
+    <changeSet author = "StepanKarapetyan" id = "13">
+        <sql>
+            INSERT INTO sensors (
+            name,
+            model,
+            description,
+            location,
+            range_id,
+            sensor_type_id,
+            sensor_unit_id
+            )
+            SELECT
+            'Barometer',
+            'ac-23',
+            'a device for measuring atmospheric pressure',
+            'kitchen',
+            (SELECT r.id FROM ranges AS r WHERE r.range_from = 22 AND r.range_to = 45),
+            (SELECT t.id FROM sensor_types AS t WHERE t.name = 'Pressure'),
+            (SELECT u.id FROM sensor_units AS u WHERE u.name = 'bar');
+
+            INSERT INTO sensors (
+            name,
+            model,
+            description,
+            location,
+            range_id,
+            sensor_type_id,
+            sensor_unit_id
+            )
+            SELECT
+            'Thermometer',
+            'dx-3',
+            'a device for measuring temperature',
+            'living room',
+            (SELECT r.id FROM ranges AS r WHERE r.range_from = 12 AND r.range_to = 19),
+            (SELECT t.id FROM sensor_types AS t WHERE t.name = 'Temperature'),
+            (SELECT u.id FROM sensor_units AS u WHERE u.name = '°С');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,6 +1,5 @@
 package by.agsr.MonitorSensors.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -32,10 +32,11 @@ public class SensorControllerTest {
     private JsonFileReader jsonFileReader;
 
     @Test
+    @WithMockUser(roles = "Administrator")
     @Transactional
     public void successCreateRequest() throws Exception {
         String jsonRequest = jsonFileReader.readJsonFromFile("rest/test_case_1/request.json");
-        MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
+        MvcResult result = mockMvc.perform(post("/agsr/api/sensors")
                         .content(jsonRequest)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
@@ -52,6 +53,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorNameNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_2/request.json",
@@ -60,6 +62,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorNameNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_3/request.json",
@@ -68,6 +71,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorModelNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_4/request.json",
@@ -76,6 +80,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorModelNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_5/request.json",
@@ -84,6 +89,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorDescriptionNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_6/request.json",
@@ -92,6 +98,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorLocationNoFitSize() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_7/request.json",
@@ -100,6 +107,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorTypeEmpty() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_8/request.json",
@@ -108,6 +116,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_9/request.json",
@@ -116,6 +125,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeFromFieldNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_10/request.json",
@@ -124,6 +134,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeToFieldNull() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_11/request.json",
@@ -132,6 +143,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeFromNotPositive() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_12/request.json",
@@ -140,6 +152,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeToNotPositive() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_13/request.json",
@@ -148,6 +161,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorUnitNotExist() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_14/request.json",
@@ -156,6 +170,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorTypeNotExist() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_15/request.json",
@@ -164,6 +179,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeNotExist() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_16/request.json",
@@ -172,6 +188,7 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void sensorRangeIsNotCorrect() throws Exception {
         executePostWithBadRequestAndCompareResults(
                 "rest/test_case_17/request.json",
@@ -180,60 +197,66 @@ public class SensorControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "Viewer")
     public void getAllSensors() throws Exception {
-        executeGetWithOkCodeAndCompareResults("/",
+        executeGetWithOkCodeAndCompareResults("",
                 "rest/test_case_18/response.json"
         );
     }
 
     @Test
+    @WithMockUser(roles = "Viewer")
     public void getSensorsByName() throws Exception {
-        executeGetWithOkCodeAndCompareResults("?name=meter",
+        executeGetWithOkCodeAndCompareResults("/search/byName?name=meter",
                 "rest/test_case_19/response.json"
         );
     }
 
     @Test
+    @WithMockUser(roles = "Viewer")
     public void getEmptyListSensorsWhenNoFoundName() throws Exception{
-        executeGetWithOkCodeAndCompareResults("?name=nonFoundName",
+        executeGetWithOkCodeAndCompareResults("/search/byName?name=notFoundName",
                 "rest/test_case_20/response.json"
         );
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void getAllSensorsWhenEmptyName() throws Exception{
-        executeGetWithOkCodeAndCompareResults("?name=",
+        executeGetWithOkCodeAndCompareResults("/search/byName?name=",
                 "rest/test_case_21/response.json"
         );
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void getSensorsByModel() throws Exception {
-        executeGetWithOkCodeAndCompareResults("?model=ac",
+        executeGetWithOkCodeAndCompareResults("/search/byModel?model=ac",
                 "rest/test_case_22/response.json"
         );
     }
 
     @Test
+    @WithMockUser(roles = "Administrator")
     public void getEmptyListSensorsWhenNoFoundModel() throws Exception{
-        executeGetWithOkCodeAndCompareResults("?model=nonFoundModel",
+        executeGetWithOkCodeAndCompareResults("/search/byModel?model=nonFoundModel",
                 "rest/test_case_23/response.json"
         );
     }
 
     @Test
+    @WithMockUser(roles = "Viewer")
     public void getAllSensorsWhenEmptyModel() throws Exception{
-        executeGetWithOkCodeAndCompareResults("?model=",
+        executeGetWithOkCodeAndCompareResults("/search/byModel?model=",
                 "rest/test_case_24/response.json"
         );
     }
 
-
-
     @Test
     @Transactional
+    @WithMockUser(roles = "Administrator")
     public void deleteSensor() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/agsr/monitor/sensors/1"))
+        MvcResult result = mockMvc.perform(delete("/agsr/api/sensors/1"))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -243,21 +266,24 @@ public class SensorControllerTest {
 
     private void executeGetWithOkCodeAndCompareResults(String url,
                                                        String jsonResponseFilePath) throws Exception {
-        MvcResult result = mockMvc.perform(get("/agsr/monitor/sensors" + url))
+        MvcResult result = mockMvc.perform(get("/agsr/api/sensors" + url))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String responseBodyContent = result.getResponse().getContentAsString();
         String jsonResponse = jsonFileReader.readJsonFromFile(jsonResponseFilePath);
 
-        ObjectMapper mapper = new ObjectMapper();
-        assertEquals(mapper.readTree(responseBodyContent), mapper.readTree(jsonResponse));
+        assertJson(jsonResponse)
+                .where()
+                .keysInAnyOrder()
+                .arrayInAnyOrder()
+                .isEqualTo(responseBodyContent);
     }
 
     private void executePostWithBadRequestAndCompareResults(String jsonRequestFilePath,
                                                             String jsonResponseFilePath) throws Exception {
         String jsonRequest = jsonFileReader.readJsonFromFile(jsonRequestFilePath);
-        MvcResult result = mockMvc.perform(post("/agsr/monitor/sensors/")
+        MvcResult result = mockMvc.perform(post("/agsr/api/sensors")
                         .content(jsonRequest)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest())
@@ -266,10 +292,10 @@ public class SensorControllerTest {
         String responseBodyContent = result.getResponse().getContentAsString();
         String jsonResponse = jsonFileReader.readJsonFromFile(jsonResponseFilePath);
 
-        assertJson(responseBodyContent)
+        assertJson(jsonResponse)
                 .where()
                 .keysInAnyOrder()
                 .arrayInAnyOrder()
-                .isEqualTo(jsonResponse);
+                .isEqualTo(responseBodyContent);
     }
 }

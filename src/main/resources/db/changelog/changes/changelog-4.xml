@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+    <changeSet author = "StepanKarapetyan" id = "6">
+        <createTable tableName="sensors">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(200)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="location" type="VARCHAR(40)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="range_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sensor_type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sensor_unit_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="StepanKarapetyan" id="7">
+        <addForeignKeyConstraint baseTableName="sensors"
+                                 baseColumnNames="range_id"
+                                 constraintName="fk_sensors_range_id"
+                                 referencedTableName="ranges"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet author="StepanKarapetyan" id="8">
+        <addForeignKeyConstraint baseTableName="sensors"
+                                 baseColumnNames="sensor_type_id"
+                                 constraintName="fk_sensors_sensor_type_id"
+                                 referencedTableName="sensor_types"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet author="StepanKarapetyan" id="9">
+        <addForeignKeyConstraint baseTableName="sensors"
+                                 baseColumnNames="sensor_unit_id"
+                                 constraintName="fk_sensors_sensor_unit_id"
+                                 referencedTableName="sensor_units"
+                                 referencedColumnNames="id"
+                                 onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

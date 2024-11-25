@@ -28,16 +28,29 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.hibernate:hibernate-core:6.5.0.Final'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
-	implementation('com.h2database:h2:2.2.224')
+	implementation 'com.h2database:h2:2.2.224'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.3.5'
+	implementation 'org.liquibase:liquibase-core:4.27.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test:6.3.3'
 	testImplementation 'uk.org.webcompere:model-assert:1.0.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
+}
+
+bootJar {
+	enabled = true
+	archiveBaseName = 'monitor-sensors'
+	archiveVersion = '1.0.1'
 }
