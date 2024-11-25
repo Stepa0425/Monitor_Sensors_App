@@ -6,7 +6,7 @@ import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException
 import org.springframework.stereotype.Component;
 
 @Component
-class SensorRangeCorrectValidator {
+class SensorRangeCorrectValidator implements SensorFieldValidator {
 
     public void validate(SensorRequestDTO sensorRequestDTO) {
         RangeDTO range = sensorRequestDTO.getRange();
