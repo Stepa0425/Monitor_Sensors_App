@@ -38,6 +38,9 @@ public class SensorRequestValidatorImplTest {
     @Mock
     private SensorTypeExistValidator sensorTypeExistValidator;
 
+    @Mock
+    private SensorRangeCorrectValidator sensorRangeCorrectValidator;
+
     @Test
     public void shouldValidateNewSensorWithoutException() {
         var sensorRequestDTO = new SensorRequestDTO();
@@ -52,11 +55,13 @@ public class SensorRequestValidatorImplTest {
         doNothing().when(sensorTypeExistValidator).validateExistSensorType(typeName);
         doNothing().when(sensorUnitExistValidator).validateExistSensorUnit(unitName);
         doNothing().when(sensorRangeExistValidator).validateExistRange(range);
+        doNothing().when(sensorRangeCorrectValidator).validateCorrectRange(range);
         sensorValidator.validateSensorRequest(sensorRequestDTO);
 
         verify(sensorTypeExistValidator, times(1)).validateExistSensorType(typeName);
         verify(sensorUnitExistValidator, times(1)).validateExistSensorUnit(unitName);
         verify(sensorRangeExistValidator, times(1)).validateExistRange(range);
+        verify(sensorRangeCorrectValidator, times(1)).validateCorrectRange(range);
     }
 
     @Test
@@ -103,12 +108,15 @@ public class SensorRequestValidatorImplTest {
     @Test
     public void shouldThrowRangeIncorrectException() {
         var sensorRequestDTO = new SensorRequestDTO();
-        var range = new RangeDTO(100, 10);
+        var from = 100;
+        var to = 10;
+        var range = new RangeDTO(from, to);
         sensorRequestDTO.setRange(range);
-        doNothing().when(sensorRangeExistValidator).validateExistRange(range);
+        doThrow(new SensorRangeIncorrectException(from, to)).when(sensorRangeCorrectValidator).validateCorrectRange(range);
 
-        assertThrows(SensorRangeIncorrectException.class,
+        var exception = assertThrows(SensorRangeIncorrectException.class,
                 () -> sensorValidator.validateSensorRequest(sensorRequestDTO));
+        assertEquals("The range {100, 10} not correct.", exception.getMessage());
     }
 
     @Test

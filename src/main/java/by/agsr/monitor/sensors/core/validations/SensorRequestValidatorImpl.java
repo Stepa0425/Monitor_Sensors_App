@@ -2,7 +2,6 @@ package by.agsr.monitor.sensors.core.validations;
 
 import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
-import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,9 @@ class SensorRequestValidatorImpl implements SensorRequestValidator {
 
     @Autowired
     private final SensorTypeExistValidator sensorTypeExistValidator;
+
+    @Autowired
+    private final SensorRangeCorrectValidator sensorRangeCorrectValidator;
 
     @Override
     public void validateSensorRequest(SensorRequestDTO sensorRequestDTO) {
@@ -50,12 +52,7 @@ class SensorRequestValidatorImpl implements SensorRequestValidator {
     }
 
     private void validateCorrectRange(RangeDTO range) {
-        if (range != null
-                && range.getRangeFrom() != null
-                && range.getRangeTo() != null
-                && range.getRangeFrom().compareTo(range.getRangeTo()) >= 0) {
-            throw new SensorRangeIncorrectException(range.getRangeFrom(), range.getRangeTo());
-        }
+     sensorRangeCorrectValidator.validateCorrectRange(range);
     }
 
     @Override

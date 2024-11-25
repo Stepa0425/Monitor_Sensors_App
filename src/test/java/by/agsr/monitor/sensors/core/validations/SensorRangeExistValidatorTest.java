@@ -30,7 +30,7 @@ public class SensorRangeExistValidatorTest {
     private RangeRepository rangeRepository;
 
     @Test
-    public void shouldValidateRangeSuccess(){
+    public void shouldDoNothingWhenRangeFound(){
         var from = 10;
         var to = 20;
         when(rangeRepository.findByRangeFromAndRangeTo(from, to)).thenReturn(Optional.of(mock(Range.class)));

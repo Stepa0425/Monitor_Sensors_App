@@ -27,7 +27,7 @@ public class SensorExistValidatorTest {
     private SensorRepository sensorRepository;
 
     @Test
-    public void shouldValidateSensorSuccess(){
+    public void shouldDoNothingWhenSensorFound(){
         var id = 1L;
         when(sensorRepository.findById(id)).thenReturn(Optional.of(mock(Sensor.class)));
         sensorValidator.validateExistingSensor(id);
