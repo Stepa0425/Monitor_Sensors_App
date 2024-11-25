@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
 	implementation 'com.h2database:h2:2.2.224'
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.3.5'
+	implementation 'org.liquibase:liquibase-core:4.27.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -42,4 +43,14 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
+}
+
+bootJar {
+	enabled = true
+	archiveBaseName = 'monitor-sensors'
+	archiveVersion = '1.0.1'
 }
