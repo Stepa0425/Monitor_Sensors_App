@@ -15,15 +15,15 @@ class SensorRequestValidatorImpl implements SensorRequestValidator {
     private final SensorCreateValidator sensorCreateValidator;
 
     @Autowired
-    private final SensorExistValidator sensorExistValidator;
+    private final SensorDeleteValidator sensorDeleteValidator;
 
     @Override
-    public void validateSensorRequestOnCreation(SensorRequestDTO sensorRequestDTO) {
+    public void validateSensorRequestOnCreate(SensorRequestDTO sensorRequestDTO) {
         sensorCreateValidator.validate(sensorRequestDTO);
     }
 
     @Override
-    public void validateExistingSensor(Long sensorId) {
-        sensorExistValidator.validate(sensorId);
+    public void validateSensorRequestOnDelete(Long sensorId) {
+        sensorDeleteValidator.validate(sensorId);
     }
 }

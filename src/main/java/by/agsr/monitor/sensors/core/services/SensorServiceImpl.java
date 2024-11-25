@@ -27,7 +27,7 @@ class SensorServiceImpl implements SensorService {
 
     @Override
     public SensorResponseDTO createSensor(SensorRequestDTO sensorRequestDTO) {
-        sensorValidator.validateSensorRequestOnCreation(sensorRequestDTO);
+        sensorValidator.validateSensorRequestOnCreate(sensorRequestDTO);
 
         Sensor sensor = converterDTO.convertToSensor(sensorRequestDTO);
         Sensor savedSensor = sensorRepository.save(sensor);
@@ -43,14 +43,14 @@ class SensorServiceImpl implements SensorService {
 
     @Override
     public void deleteSensor(Long sensorId) {
-        sensorValidator.validateExistingSensor(sensorId);
+        sensorValidator.validateSensorRequestOnDelete(sensorId);
         sensorRepository.deleteById(sensorId);
     }
 
     @Override
     public SensorResponseDTO updateSensor(Long sensorId, SensorRequestDTO sensorRequestDTO) {
-        sensorValidator.validateExistingSensor(sensorId);
-        sensorValidator.validateSensorRequestOnCreation(sensorRequestDTO);
+        sensorValidator.validateSensorRequestOnDelete(sensorId);
+        sensorValidator.validateSensorRequestOnCreate(sensorRequestDTO);
         Sensor sensor = sensorRepository.findById(sensorId).get();
         Sensor updatedSensor = converterDTO.convertToSensor(sensorRequestDTO);
 

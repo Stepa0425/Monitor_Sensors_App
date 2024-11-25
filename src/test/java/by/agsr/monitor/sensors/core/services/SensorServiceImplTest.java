@@ -60,7 +60,7 @@ public class SensorServiceImplTest {
         when(converterDTO.convertToSensorResponseDTO(savedSensor)).thenReturn(responseDTO);
         SensorResponseDTO result = sensorService.createSensor(sensorRequestDTO);
 
-        verify(sensorValidator, times(1)).validateSensorRequestOnCreation(sensorRequestDTO);
+        verify(sensorValidator, times(1)).validateSensorRequestOnCreate(sensorRequestDTO);
         verify(converterDTO, times(1)).convertToSensor(sensorRequestDTO);
         verify(sensorRepository, times(1)).save(sensor);
         verify(converterDTO, times(1)).convertToSensorResponseDTO(savedSensor);
@@ -72,13 +72,13 @@ public class SensorServiceImplTest {
     @Test
     public void shouldStopCreationWhenThrowException() {
         SensorRequestDTO sensorRequestDTO = new SensorRequestDTO();
-        doThrow(new SensorTypeNotFoundException("Not exist sensor type")).when(sensorValidator).validateSensorRequestOnCreation(sensorRequestDTO);
+        doThrow(new SensorTypeNotFoundException("Not exist sensor type")).when(sensorValidator).validateSensorRequestOnCreate(sensorRequestDTO);
 
         var exception = assertThrows(SensorTypeNotFoundException.class,
                 () -> sensorService.createSensor(sensorRequestDTO));
 
         assertEquals("Sensor type with name: Not exist sensor type not found.", exception.getMessage());
-        verify(sensorValidator, times(1)).validateSensorRequestOnCreation(sensorRequestDTO);
+        verify(sensorValidator, times(1)).validateSensorRequestOnCreate(sensorRequestDTO);
         verifyNoInteractions(converterDTO);
         verifyNoInteractions(sensorRepository);
     }
@@ -113,18 +113,18 @@ public class SensorServiceImplTest {
         var validSensorId = 1L;
         sensorService.deleteSensor(validSensorId);
 
-        verify(sensorValidator, times(1)).validateExistingSensor(validSensorId);
+        verify(sensorValidator, times(1)).validateSensorRequestOnDelete(validSensorId);
         verify(sensorRepository, times(1)).deleteById(validSensorId);
     }
 
     @Test
     void shouldThrowExceptionSensorNotFound() {
         var invalidSensorId = 999L;
-        doThrow(new SensorNotFoundException(invalidSensorId)).when(sensorValidator).validateExistingSensor(invalidSensorId);
+        doThrow(new SensorNotFoundException(invalidSensorId)).when(sensorValidator).validateSensorRequestOnDelete(invalidSensorId);
         assertThrows(SensorNotFoundException.class,
                 () -> sensorService.deleteSensor(invalidSensorId));
 
-        verify(sensorValidator, times(1)).validateExistingSensor(invalidSensorId);
+        verify(sensorValidator, times(1)).validateSensorRequestOnDelete(invalidSensorId);
         verify(sensorRepository, never()).deleteById(any());
     }
 
@@ -152,8 +152,8 @@ public class SensorServiceImplTest {
 
         SensorResponseDTO result = sensorService.updateSensor(sensorId, sensorRequestDTO);
 
-        verify(sensorValidator, times(1)).validateExistingSensor(sensorId);
-        verify(sensorValidator, times(1)).validateSensorRequestOnCreation(sensorRequestDTO);
+        verify(sensorValidator, times(1)).validateSensorRequestOnDelete(sensorId);
+        verify(sensorValidator, times(1)).validateSensorRequestOnCreate(sensorRequestDTO);
         verify(sensorRepository, times(1)).findById(sensorId);
         verify(sensorRepository, times(1)).save(existingSensor);
         verify(converterDTO, times(1)).convertToSensor(sensorRequestDTO);
@@ -173,12 +173,12 @@ public class SensorServiceImplTest {
     void shouldStopUpdateWhenThrowSensorNotFoundException() {
         var sensorId = 999L;
         var sensorRequestDTO = new SensorRequestDTO();
-        doThrow(new SensorNotFoundException(sensorId)).when(sensorValidator).validateExistingSensor(sensorId);
+        doThrow(new SensorNotFoundException(sensorId)).when(sensorValidator).validateSensorRequestOnDelete(sensorId);
 
         assertThrows(SensorNotFoundException.class,
                 () -> sensorService.updateSensor(sensorId, sensorRequestDTO));
 
-        verify(sensorValidator, times(1)).validateExistingSensor(sensorId);
+        verify(sensorValidator, times(1)).validateSensorRequestOnDelete(sensorId);
         verifyNoMoreInteractions(sensorValidator);
         verifyNoInteractions(converterDTO);
         verify(sensorRepository, never()).save(any());
@@ -189,14 +189,14 @@ public class SensorServiceImplTest {
         var sensorId = 1L;
         var sensorRequestDTO = new SensorRequestDTO();
 
-        doNothing().when(sensorValidator).validateExistingSensor(sensorId);
-        doThrow(new SensorTypeNotFoundException("Sensor type not found")).when(sensorValidator).validateSensorRequestOnCreation(sensorRequestDTO);
+        doNothing().when(sensorValidator).validateSensorRequestOnDelete(sensorId);
+        doThrow(new SensorTypeNotFoundException("Sensor type not found")).when(sensorValidator).validateSensorRequestOnCreate(sensorRequestDTO);
 
         assertThrows(SensorTypeNotFoundException.class,
                 () -> sensorService.updateSensor(sensorId, sensorRequestDTO));
 
-        verify(sensorValidator, times(1)).validateExistingSensor(sensorId);
-        verify(sensorValidator, times(1)).validateSensorRequestOnCreation(sensorRequestDTO);
+        verify(sensorValidator, times(1)).validateSensorRequestOnDelete(sensorId);
+        verify(sensorValidator, times(1)).validateSensorRequestOnCreate(sensorRequestDTO);
         verifyNoInteractions(converterDTO);
         verify(sensorRepository, never()).save(any());
     }
