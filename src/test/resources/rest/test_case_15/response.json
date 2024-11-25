@@ -1,15 +1,4 @@
 {
-  "errors": [
-    {
-      "field": "type",
-      "message": "The type: notExistType not exist."
-    }
-  ],
-  "name": null,
-  "model": null,
-  "description": null,
-  "location": null,
-  "type": null,
-  "unit": null,
-  "range": null
+  "field": "type",
+  "message": "Sensor type with name: notExistType not found."
 }

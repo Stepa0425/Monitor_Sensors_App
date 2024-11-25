@@ -28,19 +28,18 @@ public class ConverterDTO {
     @Autowired
     private final RangeRepository rangeRepository;
 
-    public Sensor convertToSensor(SensorRequestDTO sensorRequestDTO){
+    public Sensor convertToSensor(SensorRequestDTO sensorRequestDTO) {
         Sensor sensor = new Sensor();
         Integer rangeFrom = sensorRequestDTO.getRange().getRangeFrom();
         Integer rangeTo = sensorRequestDTO.getRange().getRangeTo();
 
         SensorType sensorType = sensorTypeRepository.findByName(sensorRequestDTO.getType()).get();
+        Range range = rangeRepository.findByRangeFromAndRangeTo(rangeFrom, rangeTo).get();
 
-        if (sensorRequestDTO.getUnit() != null && !sensorRequestDTO.getUnit().isBlank()){
+        if (sensorRequestDTO.getUnit() != null && !sensorRequestDTO.getUnit().isBlank()) {
             SensorUnit sensorUnit = sensorUnitRepository.findByName(sensorRequestDTO.getUnit()).get();
             sensor.setUnit(sensorUnit);
         }
-
-        Range range = rangeRepository.findByRangeFromAndRangeTo(rangeFrom, rangeTo).get();
 
         sensor.setName(sensorRequestDTO.getName());
         sensor.setDescription(sensorRequestDTO.getDescription());
@@ -52,7 +51,7 @@ public class ConverterDTO {
         return sensor;
     }
 
-    public SensorResponseDTO convertToSensorResponseDTO(Sensor sensor){
+    public SensorResponseDTO convertToSensorResponseDTO(Sensor sensor) {
         SensorResponseDTO sensorResponseDTO = new SensorResponseDTO();
         Integer rangeFrom = sensor.getRange().getRangeFrom();
         Integer rangeTo = sensor.getRange().getRangeTo();
@@ -63,7 +62,10 @@ public class ConverterDTO {
         sensorResponseDTO.setDescription(sensor.getDescription());
         sensorResponseDTO.setLocation(sensor.getLocation());
         sensorResponseDTO.setType(sensor.getType().getName());
-        sensorResponseDTO.setUnit(sensor.getUnit().getName());
+
+        if (sensor.getUnit() != null) {
+            sensorResponseDTO.setUnit(sensor.getUnit().getName());
+        }
         sensorResponseDTO.setRange(rangeDTO);
 
         return sensorResponseDTO;

@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SensorResponseDTO extends CoreResponse {
+public class SensorResponseDTO {
     private String name;
     private String model;
     private String description;
@@ -23,5 +22,4 @@ public class SensorResponseDTO extends CoreResponse {
     @JsonAlias("range")
     private RangeDTO range;
 
-    private List<ValidationErrorDTO> errors;
 }

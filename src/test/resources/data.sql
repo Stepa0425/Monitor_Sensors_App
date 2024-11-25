@@ -2,7 +2,8 @@ INSERT INTO ranges (range_from, range_to)
 VALUES (20, 50),
         (12,19),
         (15,20),
-        (22, 45);
+        (22, 45),
+        (20, 10);
 
 INSERT INTO sensor_types(name)
 VALUES  ('Pressure'),
