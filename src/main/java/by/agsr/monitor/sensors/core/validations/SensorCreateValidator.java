@@ -24,11 +24,9 @@ class SensorCreateValidator {
 
 
     public void validate(SensorRequestDTO sensorRequestDTO) {
-        String unit = sensorRequestDTO.getUnit();
-
         sensorTypeExistValidator.validateField(sensorRequestDTO);
         sensorRangeExistValidator.validateField(sensorRequestDTO);
         sensorRangeCorrectValidator.validateField(sensorRequestDTO);
-        sensorUnitExistValidator.validate(unit);
+        sensorUnitExistValidator.validateField(sensorRequestDTO);
     }
 }

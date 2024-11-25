@@ -1,6 +1,5 @@
 package by.agsr.monitor.sensors.core.validations;
 
-
 import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorNotFoundException;
@@ -56,14 +55,14 @@ class SensorUpdateValidatorTest {
         sensorRequestDTO.setRange(range);
 
         doNothing().when(sensorTypeExistValidator).validateField(sensorRequestDTO);
-        doNothing().when(sensorUnitExistValidator).validate(unitName);
+        doNothing().when(sensorUnitExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorRangeExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorRangeCorrectValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorExistValidator).validate(id);
         sensorUpdateValidator.validate(id, sensorRequestDTO);
 
         verify(sensorTypeExistValidator, times(1)).validateField(sensorRequestDTO);
-        verify(sensorUnitExistValidator, times(1)).validate(unitName);
+        verify(sensorUnitExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorRangeExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorRangeCorrectValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorExistValidator, times(1)).validate(id);
@@ -88,7 +87,7 @@ class SensorUpdateValidatorTest {
         var unitName = "NonExistUnit";
         sensorRequestDTO.setUnit(unitName);
         doThrow(new SensorUnitNotFoundException(unitName))
-                .when(sensorUnitExistValidator).validate(unitName);
+                .when(sensorUnitExistValidator).validateField(sensorRequestDTO);
 
         var exception = assertThrows(SensorUnitNotFoundException.class,
                 () -> sensorUpdateValidator.validate(id, sensorRequestDTO));

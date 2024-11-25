@@ -50,13 +50,13 @@ class SensorCreateValidatorTest {
         sensorRequestDTO.setRange(range);
 
         doNothing().when(sensorTypeExistValidator).validateField(sensorRequestDTO);
-        doNothing().when(sensorUnitExistValidator).validate(unitName);
+        doNothing().when(sensorUnitExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorRangeExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorRangeCorrectValidator).validateField(sensorRequestDTO);
         sensorCreateValidator.validate(sensorRequestDTO);
 
         verify(sensorTypeExistValidator, times(1)).validateField(sensorRequestDTO);
-        verify(sensorUnitExistValidator, times(1)).validate(unitName);
+        verify(sensorUnitExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorRangeExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorRangeCorrectValidator, times(1)).validateField(sensorRequestDTO);
     }
@@ -78,7 +78,7 @@ class SensorCreateValidatorTest {
         var unitName = "NonExistUnit";
         sensorRequestDTO.setUnit(unitName);
         doThrow(new SensorUnitNotFoundException(unitName))
-                .when(sensorUnitExistValidator).validate(unitName);
+                .when(sensorUnitExistValidator).validateField(sensorRequestDTO);
 
         var exception = assertThrows(SensorUnitNotFoundException.class,
                 () -> sensorCreateValidator.validate(sensorRequestDTO));
