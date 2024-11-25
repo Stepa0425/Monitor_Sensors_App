@@ -8,4 +8,6 @@ public interface SensorRequestValidator {
     void validateSensorRequestOnCreate(SensorRequestDTO sensorRequestDTO);
 
     void validateSensorRequestOnDelete(Long sensorId);
+
+    void validateSensorRequestOnUpdate(Long sensorId, SensorRequestDTO sensorRequestDTO);
 }

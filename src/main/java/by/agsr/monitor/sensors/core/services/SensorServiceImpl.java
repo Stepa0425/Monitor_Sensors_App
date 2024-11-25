@@ -28,7 +28,6 @@ class SensorServiceImpl implements SensorService {
     @Override
     public SensorResponseDTO createSensor(SensorRequestDTO sensorRequestDTO) {
         sensorValidator.validateSensorRequestOnCreate(sensorRequestDTO);
-
         Sensor sensor = converterDTO.convertToSensor(sensorRequestDTO);
         Sensor savedSensor = sensorRepository.save(sensor);
         return converterDTO.convertToSensorResponseDTO(savedSensor);
@@ -49,8 +48,7 @@ class SensorServiceImpl implements SensorService {
 
     @Override
     public SensorResponseDTO updateSensor(Long sensorId, SensorRequestDTO sensorRequestDTO) {
-        sensorValidator.validateSensorRequestOnDelete(sensorId);
-        sensorValidator.validateSensorRequestOnCreate(sensorRequestDTO);
+        sensorValidator.validateSensorRequestOnUpdate(sensorId, sensorRequestDTO);
         Sensor sensor = sensorRepository.findById(sensorId).get();
         Sensor updatedSensor = converterDTO.convertToSensor(sensorRequestDTO);
 
@@ -80,18 +78,18 @@ class SensorServiceImpl implements SensorService {
                 : getAllSensors();
     }
 
-    private boolean isCorrectSearchValue(String value){
+    private boolean isCorrectSearchValue(String value) {
         return value != null && !value.isBlank();
     }
 
-    private List<SensorResponseDTO> findSensorsByName(String name){
+    private List<SensorResponseDTO> findSensorsByName(String name) {
         List<Sensor> foundSensors = sensorRepository.findByNameContaining(name);
         return foundSensors.stream()
                 .map(converterDTO::convertToSensorResponseDTO)
                 .toList();
     }
 
-    private List<SensorResponseDTO> findSensorsByModel(String model){
+    private List<SensorResponseDTO> findSensorsByModel(String model) {
         List<Sensor> foundSensors = sensorRepository.findByModelContaining(model);
         return foundSensors.stream()
                 .map(converterDTO::convertToSensorResponseDTO)
