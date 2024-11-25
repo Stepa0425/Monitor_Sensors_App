@@ -19,26 +19,26 @@ public class SensorRangeCorrectValidatorTest {
     public void shouldDoNothingWhenRangeCorrect(){
         var range = new RangeDTO(10, 20);
         sensorRequestDTO.setRange(range);
-        sensorRangeCorrectValidator.validate(sensorRequestDTO);
+        sensorRangeCorrectValidator.validateField(sensorRequestDTO);
     }
 
     @Test
     void shouldDoNothingWhenRangeIsNull() {
-        sensorRangeCorrectValidator.validate(sensorRequestDTO);
+        sensorRangeCorrectValidator.validateField(sensorRequestDTO);
     }
 
     @Test
     void shouldDoNothingWhenRangeFromIsNull() {
         var range = new RangeDTO(null, 10);
         sensorRequestDTO.setRange(range);
-        sensorRangeCorrectValidator.validate(sensorRequestDTO);
+        sensorRangeCorrectValidator.validateField(sensorRequestDTO);
     }
 
     @Test
     void shouldDoNothingWhenRangeToIsNull() {
         var range = new RangeDTO(10, null);
         sensorRequestDTO.setRange(range);
-        sensorRangeCorrectValidator.validate(sensorRequestDTO);
+        sensorRangeCorrectValidator.validateField(sensorRequestDTO);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class SensorRangeCorrectValidatorTest {
         var range = new RangeDTO(10, 10);
         sensorRequestDTO.setRange(range);
         var exception = assertThrows(SensorRangeIncorrectException.class,
-                () -> sensorRangeCorrectValidator.validate(sensorRequestDTO));
+                () -> sensorRangeCorrectValidator.validateField(sensorRequestDTO));
         assertEquals("The range {10, 10} not correct.", exception.getMessage());
     }
 
@@ -55,6 +55,6 @@ public class SensorRangeCorrectValidatorTest {
         var range = new RangeDTO(15, 10);
         sensorRequestDTO.setRange(range);
         var exception = assertThrows(SensorRangeIncorrectException.class,
-                () -> sensorRangeCorrectValidator.validate(sensorRequestDTO));
+                () -> sensorRangeCorrectValidator.validateField(sensorRequestDTO));
         assertEquals("The range {15, 10} not correct.", exception.getMessage());    }
 }

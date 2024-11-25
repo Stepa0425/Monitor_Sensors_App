@@ -38,9 +38,10 @@ class SensorCreateValidatorTest {
     @Mock
     private SensorRangeCorrectValidator sensorRangeCorrectValidator;
 
+    private final SensorRequestDTO sensorRequestDTO = new SensorRequestDTO();
+
     @Test
     public void shouldValidateNewSensorWithoutException() {
-        var sensorRequestDTO = new SensorRequestDTO();
         var typeName = "Temperature";
         var unitName = "Celsius";
         var range = new RangeDTO(10, 100);
@@ -51,19 +52,18 @@ class SensorCreateValidatorTest {
 
         doNothing().when(sensorTypeExistValidator).validate(typeName);
         doNothing().when(sensorUnitExistValidator).validate(unitName);
-        doNothing().when(sensorRangeExistValidator).validate(range);
-        doNothing().when(sensorRangeCorrectValidator).validate(sensorRequestDTO);
+        doNothing().when(sensorRangeExistValidator).validateField(sensorRequestDTO);
+        doNothing().when(sensorRangeCorrectValidator).validateField(sensorRequestDTO);
         sensorCreateValidator.validate(sensorRequestDTO);
 
         verify(sensorTypeExistValidator, times(1)).validate(typeName);
         verify(sensorUnitExistValidator, times(1)).validate(unitName);
-        verify(sensorRangeExistValidator, times(1)).validate(range);
-        verify(sensorRangeCorrectValidator, times(1)).validate(sensorRequestDTO);
+        verify(sensorRangeExistValidator, times(1)).validateField(sensorRequestDTO);
+        verify(sensorRangeCorrectValidator, times(1)).validateField(sensorRequestDTO);
     }
 
     @Test
     public void shouldThrowSensorTypeNotFoundException() {
-        var sensorRequestDTO = new SensorRequestDTO();
         var typeName = "NonExistType";
         sensorRequestDTO.setType(typeName);
         doThrow(new SensorTypeNotFoundException(typeName))
@@ -76,7 +76,6 @@ class SensorCreateValidatorTest {
 
     @Test
     public void shouldThrowSensorUnitNotFoundException() {
-        var sensorRequestDTO = new SensorRequestDTO();
         var unitName = "NonExistUnit";
         sensorRequestDTO.setUnit(unitName);
         doThrow(new SensorUnitNotFoundException(unitName))
@@ -89,13 +88,12 @@ class SensorCreateValidatorTest {
 
     @Test
     public void shouldThrowRangeNotFoundException() {
-        var sensorRequestDTO = new SensorRequestDTO();
         var from = 10;
         var to = 100;
         var range = new RangeDTO(from, to);
         sensorRequestDTO.setRange(range);
         doThrow(new SensorRangeNotFoundException(from, to))
-                .when(sensorRangeExistValidator).validate(range);
+                .when(sensorRangeExistValidator).validateField(sensorRequestDTO);
 
         var exception = assertThrows(SensorRangeNotFoundException.class,
                 () -> sensorCreateValidator.validate(sensorRequestDTO));
@@ -104,12 +102,11 @@ class SensorCreateValidatorTest {
 
     @Test
     public void shouldThrowRangeIncorrectException() {
-        var sensorRequestDTO = new SensorRequestDTO();
         var from = 100;
         var to = 10;
         var range = new RangeDTO(from, to);
         sensorRequestDTO.setRange(range);
-        doThrow(new SensorRangeIncorrectException(from, to)).when(sensorRangeCorrectValidator).validate(sensorRequestDTO);
+        doThrow(new SensorRangeIncorrectException(from, to)).when(sensorRangeCorrectValidator).validateField(sensorRequestDTO);
 
         var exception = assertThrows(SensorRangeIncorrectException.class,
                 () -> sensorCreateValidator.validate(sensorRequestDTO));

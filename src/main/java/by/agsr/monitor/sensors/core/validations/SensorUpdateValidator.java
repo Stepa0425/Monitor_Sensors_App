@@ -1,6 +1,5 @@
 package by.agsr.monitor.sensors.core.validations;
 
-import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,11 @@ class SensorUpdateValidator {
     public void validate(Long sensorId, SensorRequestDTO sensorRequestDTO){
         String type = sensorRequestDTO.getType();
         String unit = sensorRequestDTO.getUnit();
-        RangeDTO range = sensorRequestDTO.getRange();
 
         sensorExistValidator.validate(sensorId);
         sensorTypeExistValidator.validate(type);
-        sensorRangeExistValidator.validate(range);
-        sensorRangeCorrectValidator.validate(sensorRequestDTO);
+        sensorRangeExistValidator.validateField(sensorRequestDTO);
+        sensorRangeCorrectValidator.validateField(sensorRequestDTO);
         sensorUnitExistValidator.validate(unit);
     }
 
