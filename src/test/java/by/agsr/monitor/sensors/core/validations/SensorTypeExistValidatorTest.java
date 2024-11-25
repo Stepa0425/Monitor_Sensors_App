@@ -1,5 +1,6 @@
 package by.agsr.monitor.sensors.core.validations;
 
+import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
 import by.agsr.monitor.sensors.core.models.SensorType;
 import by.agsr.monitor.sensors.core.repositories.SensorTypeRepository;
@@ -27,34 +28,38 @@ public class SensorTypeExistValidatorTest {
     @Mock
     private SensorTypeRepository sensorTypeRepository;
 
+    private final SensorRequestDTO sensorRequestDTO = new SensorRequestDTO();
+
     @Test
     public void shouldDoNothingWhenTypeFound() {
         var name = "Sensor type";
+        sensorRequestDTO.setType(name);
         when(sensorTypeRepository.findByName(name)).thenReturn(Optional.of(mock(SensorType.class)));
-        sensorTypeExistValidator.validate(name);
+        sensorTypeExistValidator.validateField(sensorRequestDTO);
         verify(sensorTypeRepository).findByName(name);
     }
 
     @Test
     public void shouldDoNothingWhenTypeNull() {
-        String name = null;
-        sensorTypeExistValidator.validate(name);
+        sensorTypeExistValidator.validateField(sensorRequestDTO);
         verifyNoInteractions(sensorTypeRepository);
     }
 
     @Test
     public void shouldDoNothingWhenTypeBlank() {
         String name = "   ";
-        sensorTypeExistValidator.validate(name);
+        sensorRequestDTO.setType(name);
+        sensorTypeExistValidator.validateField(sensorRequestDTO);
         verifyNoInteractions(sensorTypeRepository);
     }
 
     @Test
     public void shouldThrowException() {
         var name = "NonExistType";
+        sensorRequestDTO.setType(name);
         when(sensorTypeRepository.findByName(name)).thenReturn(Optional.empty());
         var exception = assertThrows(SensorTypeNotFoundException.class,
-                () -> sensorTypeExistValidator.validate(name));
+                () -> sensorTypeExistValidator.validateField(sensorRequestDTO));
         assertEquals("Sensor type with name: NonExistType not found.", exception.getMessage());
     }
 }

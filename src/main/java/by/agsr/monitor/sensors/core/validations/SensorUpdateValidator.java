@@ -26,11 +26,10 @@ class SensorUpdateValidator {
     private final SensorExistValidator sensorExistValidator;
 
     public void validate(Long sensorId, SensorRequestDTO sensorRequestDTO){
-        String type = sensorRequestDTO.getType();
         String unit = sensorRequestDTO.getUnit();
 
         sensorExistValidator.validate(sensorId);
-        sensorTypeExistValidator.validate(type);
+        sensorTypeExistValidator.validateField(sensorRequestDTO);
         sensorRangeExistValidator.validateField(sensorRequestDTO);
         sensorRangeCorrectValidator.validateField(sensorRequestDTO);
         sensorUnitExistValidator.validate(unit);

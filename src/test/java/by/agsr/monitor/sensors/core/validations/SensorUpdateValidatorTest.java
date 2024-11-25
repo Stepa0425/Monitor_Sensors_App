@@ -55,14 +55,14 @@ class SensorUpdateValidatorTest {
         sensorRequestDTO.setUnit(unitName);
         sensorRequestDTO.setRange(range);
 
-        doNothing().when(sensorTypeExistValidator).validate(typeName);
+        doNothing().when(sensorTypeExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorUnitExistValidator).validate(unitName);
         doNothing().when(sensorRangeExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorRangeCorrectValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorExistValidator).validate(id);
         sensorUpdateValidator.validate(id, sensorRequestDTO);
 
-        verify(sensorTypeExistValidator, times(1)).validate(typeName);
+        verify(sensorTypeExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorUnitExistValidator, times(1)).validate(unitName);
         verify(sensorRangeExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorRangeCorrectValidator, times(1)).validateField(sensorRequestDTO);
@@ -75,7 +75,7 @@ class SensorUpdateValidatorTest {
         var typeName = "NonExistType";
         sensorRequestDTO.setType(typeName);
         doThrow(new SensorTypeNotFoundException(typeName))
-                .when(sensorTypeExistValidator).validate(typeName);
+                .when(sensorTypeExistValidator).validateField(sensorRequestDTO);
 
         var exception = assertThrows(SensorTypeNotFoundException.class,
                 () -> sensorUpdateValidator.validate(id, sensorRequestDTO));

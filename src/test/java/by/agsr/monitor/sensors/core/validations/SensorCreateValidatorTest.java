@@ -1,6 +1,5 @@
 package by.agsr.monitor.sensors.core.validations;
 
-
 import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeIncorrectException;
@@ -50,13 +49,13 @@ class SensorCreateValidatorTest {
         sensorRequestDTO.setUnit(unitName);
         sensorRequestDTO.setRange(range);
 
-        doNothing().when(sensorTypeExistValidator).validate(typeName);
+        doNothing().when(sensorTypeExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorUnitExistValidator).validate(unitName);
         doNothing().when(sensorRangeExistValidator).validateField(sensorRequestDTO);
         doNothing().when(sensorRangeCorrectValidator).validateField(sensorRequestDTO);
         sensorCreateValidator.validate(sensorRequestDTO);
 
-        verify(sensorTypeExistValidator, times(1)).validate(typeName);
+        verify(sensorTypeExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorUnitExistValidator, times(1)).validate(unitName);
         verify(sensorRangeExistValidator, times(1)).validateField(sensorRequestDTO);
         verify(sensorRangeCorrectValidator, times(1)).validateField(sensorRequestDTO);
@@ -67,7 +66,7 @@ class SensorCreateValidatorTest {
         var typeName = "NonExistType";
         sensorRequestDTO.setType(typeName);
         doThrow(new SensorTypeNotFoundException(typeName))
-                .when(sensorTypeExistValidator).validate(typeName);
+                .when(sensorTypeExistValidator).validateField(sensorRequestDTO);
 
         var exception = assertThrows(SensorTypeNotFoundException.class,
                 () -> sensorCreateValidator.validate(sensorRequestDTO));
