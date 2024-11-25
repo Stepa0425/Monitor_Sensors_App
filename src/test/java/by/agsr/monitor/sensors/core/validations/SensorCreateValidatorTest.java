@@ -52,13 +52,13 @@ class SensorCreateValidatorTest {
         doNothing().when(sensorTypeExistValidator).validate(typeName);
         doNothing().when(sensorUnitExistValidator).validate(unitName);
         doNothing().when(sensorRangeExistValidator).validate(range);
-        doNothing().when(sensorRangeCorrectValidator).validate(range);
+        doNothing().when(sensorRangeCorrectValidator).validate(sensorRequestDTO);
         sensorCreateValidator.validate(sensorRequestDTO);
 
         verify(sensorTypeExistValidator, times(1)).validate(typeName);
         verify(sensorUnitExistValidator, times(1)).validate(unitName);
         verify(sensorRangeExistValidator, times(1)).validate(range);
-        verify(sensorRangeCorrectValidator, times(1)).validate(range);
+        verify(sensorRangeCorrectValidator, times(1)).validate(sensorRequestDTO);
     }
 
     @Test
@@ -109,7 +109,7 @@ class SensorCreateValidatorTest {
         var to = 10;
         var range = new RangeDTO(from, to);
         sensorRequestDTO.setRange(range);
-        doThrow(new SensorRangeIncorrectException(from, to)).when(sensorRangeCorrectValidator).validate(range);
+        doThrow(new SensorRangeIncorrectException(from, to)).when(sensorRangeCorrectValidator).validate(sensorRequestDTO);
 
         var exception = assertThrows(SensorRangeIncorrectException.class,
                 () -> sensorCreateValidator.validate(sensorRequestDTO));

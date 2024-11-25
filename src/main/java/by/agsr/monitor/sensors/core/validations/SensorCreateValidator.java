@@ -31,7 +31,7 @@ class SensorCreateValidator {
 
         sensorTypeExistValidator.validate(type);
         sensorRangeExistValidator.validate(range);
-        sensorRangeCorrectValidator.validate(range);
+        sensorRangeCorrectValidator.validate(sensorRequestDTO);
         sensorUnitExistValidator.validate(unit);
     }
 }
