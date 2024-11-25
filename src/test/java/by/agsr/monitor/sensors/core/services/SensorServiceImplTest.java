@@ -6,7 +6,7 @@ import by.agsr.monitor.sensors.core.api.exceptions.SensorNotFoundException;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorTypeNotFoundException;
 import by.agsr.monitor.sensors.core.models.Sensor;
 import by.agsr.monitor.sensors.core.repositories.SensorRepository;
-import by.agsr.monitor.sensors.core.validations.SensorValidator;
+import by.agsr.monitor.sensors.core.validations.SensorRequestValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,7 +43,7 @@ public class SensorServiceImplTest {
     private ConverterDTO converterDTO;
 
     @Mock
-    private SensorValidator sensorValidator;
+    private SensorRequestValidator sensorValidator;
 
     @InjectMocks
     private SensorServiceImpl sensorService;
