@@ -32,21 +32,21 @@ public class SensorUnitExistValidatorTest {
     public void shouldDoNothingWhenUnitFound() {
         var name = "Sensor unit";
         when(sensorUnitRepository.findByName(name)).thenReturn(Optional.of(mock(SensorUnit.class)));
-        sensorUnitExistValidator.validateExistSensorUnit(name);
+        sensorUnitExistValidator.validate(name);
         verify(sensorUnitRepository).findByName(name);
     }
 
     @Test
     public void shouldDoNothingWhenTypeNull() {
         String name = null;
-        sensorUnitExistValidator.validateExistSensorUnit(name);
+        sensorUnitExistValidator.validate(name);
         verifyNoInteractions(sensorUnitRepository);
     }
 
     @Test
     public void shouldDoNothingWhenUnitBlank() {
         String name = "   ";
-        sensorUnitExistValidator.validateExistSensorUnit(name);
+        sensorUnitExistValidator.validate(name);
         verifyNoInteractions(sensorUnitRepository);
     }
 
@@ -55,7 +55,7 @@ public class SensorUnitExistValidatorTest {
         var name = "NonExistUnit";
         when(sensorUnitRepository.findByName(name)).thenReturn(Optional.empty());
         var exception = assertThrows(SensorUnitNotFoundException.class,
-                () -> sensorUnitExistValidator.validateExistSensorUnit(name));
+                () -> sensorUnitExistValidator.validate(name));
         assertEquals("Sensor unit with name: NonExistUnit not found.", exception.getMessage());
     }
 }

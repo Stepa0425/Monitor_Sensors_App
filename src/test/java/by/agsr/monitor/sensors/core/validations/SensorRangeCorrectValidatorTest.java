@@ -15,32 +15,32 @@ public class SensorRangeCorrectValidatorTest {
     @Test
     public void shouldDoNothingWhenRangeCorrect(){
         var range = new RangeDTO(10, 20);
-        sensorRangeCorrectValidator.validateCorrectRange(range);
+        sensorRangeCorrectValidator.validate(range);
     }
 
     @Test
     void shouldDoNothingWhenRangeIsNull() {
         RangeDTO range = null;
-        sensorRangeCorrectValidator.validateCorrectRange(range);
+        sensorRangeCorrectValidator.validate(range);
     }
 
     @Test
     void shouldDoNothingWhenRangeFromIsNull() {
         var range = new RangeDTO(null, 10);
-        sensorRangeCorrectValidator.validateCorrectRange(range);
+        sensorRangeCorrectValidator.validate(range);
     }
 
     @Test
     void shouldDoNothingWhenRangeToIsNull() {
         var range = new RangeDTO(10, null);
-        sensorRangeCorrectValidator.validateCorrectRange(range);
+        sensorRangeCorrectValidator.validate(range);
     }
 
     @Test
     void shouldThrowExceptionWhenRangeFromEqualsRangeTo() {
         var range = new RangeDTO(10, 10);
         var exception = assertThrows(SensorRangeIncorrectException.class,
-                () -> sensorRangeCorrectValidator.validateCorrectRange(range));
+                () -> sensorRangeCorrectValidator.validate(range));
         assertEquals("The range {10, 10} not correct.", exception.getMessage());
     }
 
@@ -48,6 +48,6 @@ public class SensorRangeCorrectValidatorTest {
     void shouldThrowExceptionWhenRangeFromGreaterThanRangeTo() {
         var range = new RangeDTO(15, 10);
         var exception = assertThrows(SensorRangeIncorrectException.class,
-                () -> sensorRangeCorrectValidator.validateCorrectRange(range));
+                () -> sensorRangeCorrectValidator.validate(range));
         assertEquals("The range {15, 10} not correct.", exception.getMessage());    }
 }

@@ -31,21 +31,21 @@ public class SensorTypeExistValidatorTest {
     public void shouldDoNothingWhenTypeFound() {
         var name = "Sensor type";
         when(sensorTypeRepository.findByName(name)).thenReturn(Optional.of(mock(SensorType.class)));
-        sensorTypeExistValidator.validateExistSensorType(name);
+        sensorTypeExistValidator.validate(name);
         verify(sensorTypeRepository).findByName(name);
     }
 
     @Test
     public void shouldDoNothingWhenTypeNull() {
         String name = null;
-        sensorTypeExistValidator.validateExistSensorType(name);
+        sensorTypeExistValidator.validate(name);
         verifyNoInteractions(sensorTypeRepository);
     }
 
     @Test
     public void shouldDoNothingWhenTypeBlank() {
         String name = "   ";
-        sensorTypeExistValidator.validateExistSensorType(name);
+        sensorTypeExistValidator.validate(name);
         verifyNoInteractions(sensorTypeRepository);
     }
 
@@ -54,7 +54,7 @@ public class SensorTypeExistValidatorTest {
         var name = "NonExistType";
         when(sensorTypeRepository.findByName(name)).thenReturn(Optional.empty());
         var exception = assertThrows(SensorTypeNotFoundException.class,
-                () -> sensorTypeExistValidator.validateExistSensorType(name));
+                () -> sensorTypeExistValidator.validate(name));
         assertEquals("Sensor type with name: NonExistType not found.", exception.getMessage());
     }
 }

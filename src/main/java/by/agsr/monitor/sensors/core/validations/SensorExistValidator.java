@@ -14,7 +14,7 @@ class SensorExistValidator {
     @Autowired
     private final SensorRepository sensorRepository;
 
-    public void validateExistingSensor(Long sensorId) {
+    public void validate(Long sensorId) {
         sensorRepository.findById(sensorId)
                 .orElseThrow(() -> new SensorNotFoundException(sensorId));
     }

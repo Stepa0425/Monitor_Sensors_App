@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 class SensorRangeCorrectValidator {
 
-    public void validateCorrectRange(RangeDTO range) {
+    public void validate(RangeDTO range) {
         if (range != null
                 && range.getRangeFrom() != null
                 && range.getRangeTo() != null

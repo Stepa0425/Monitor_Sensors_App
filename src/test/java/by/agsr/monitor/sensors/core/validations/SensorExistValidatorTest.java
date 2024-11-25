@@ -30,7 +30,7 @@ public class SensorExistValidatorTest {
     public void shouldDoNothingWhenSensorFound(){
         var id = 1L;
         when(sensorRepository.findById(id)).thenReturn(Optional.of(mock(Sensor.class)));
-        sensorValidator.validateExistingSensor(id);
+        sensorValidator.validate(id);
         verify(sensorRepository).findById(id);
     }
 
@@ -39,7 +39,7 @@ public class SensorExistValidatorTest {
         var id = 1L;
         when(sensorRepository.findById(id)).thenReturn(Optional.empty());
         var exception = assertThrows(SensorNotFoundException.class,
-                ()-> sensorValidator.validateExistingSensor(id));
+                ()-> sensorValidator.validate(id));
         assertEquals("Sensor with id: 1 not found.", exception.getMessage());
     }
 }

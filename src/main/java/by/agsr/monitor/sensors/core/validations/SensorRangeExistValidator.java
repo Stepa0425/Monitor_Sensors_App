@@ -15,7 +15,7 @@ class SensorRangeExistValidator {
     @Autowired
     private final RangeRepository rangeRepository;
 
-    public void validateExistRange(RangeDTO range) {
+    public void validate(RangeDTO range) {
         if (range != null && range.getRangeFrom() != null && range.getRangeTo() != null) {
             rangeRepository.findByRangeFromAndRangeTo(range.getRangeFrom(), range.getRangeTo())
                     .orElseThrow(() -> new SensorRangeNotFoundException(range.getRangeFrom(), range.getRangeTo()));

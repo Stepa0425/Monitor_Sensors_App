@@ -14,7 +14,7 @@ class SensorTypeExistValidator {
     @Autowired
     private final SensorTypeRepository sensorTypeRepository;
 
-    public void validateExistSensorType(String type) {
+    public void validate(String type) {
         if (type != null && !type.isBlank()) {
             sensorTypeRepository.findByName(type)
                     .orElseThrow(() -> new SensorTypeNotFoundException(type));

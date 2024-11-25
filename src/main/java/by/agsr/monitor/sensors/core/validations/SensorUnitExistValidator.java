@@ -14,7 +14,7 @@ class SensorUnitExistValidator {
     @Autowired
     private final SensorUnitRepository sensorUnitRepository;
 
-    public void validateExistSensorUnit(String unit) {
+    public void validate(String unit) {
         if (unit != null && !unit.isBlank()) {
             sensorUnitRepository.findByName(unit)
                     .orElseThrow(() -> new SensorUnitNotFoundException(unit));
