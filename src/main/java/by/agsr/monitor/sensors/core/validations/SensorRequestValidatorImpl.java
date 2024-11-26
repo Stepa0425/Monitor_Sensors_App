@@ -1,6 +1,5 @@
 package by.agsr.monitor.sensors.core.validations;
 
-import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,50 +12,26 @@ import org.springframework.stereotype.Component;
 class SensorRequestValidatorImpl implements SensorRequestValidator {
 
     @Autowired
-    private final SensorUnitExistValidator sensorUnitExistValidator;
+    private final SensorCreateValidator sensorCreateValidator;
 
     @Autowired
-    private final SensorRangeExistValidator sensorRangeExistValidator;
+    private final SensorDeleteValidator sensorDeleteValidator;
 
     @Autowired
-    private final SensorExistValidator sensorExistValidator;
-
-    @Autowired
-    private final SensorTypeExistValidator sensorTypeExistValidator;
-
-    @Autowired
-    private final SensorRangeCorrectValidator sensorRangeCorrectValidator;
+    private final SensorUpdateValidator sensorUpdateValidator;
 
     @Override
-    public void validateSensorRequest(SensorRequestDTO sensorRequestDTO) {
-        String type = sensorRequestDTO.getType();
-        String unit = sensorRequestDTO.getUnit();
-        RangeDTO range = sensorRequestDTO.getRange();
-
-        validateExistSensorType(type);
-        validateExistRange(range);
-        validateCorrectRange(range);
-        validateExistSensorUnit(unit);
-    }
-
-    private void validateExistSensorType(String type) {
-        sensorTypeExistValidator.validateExistSensorType(type);
-    }
-
-    private void validateExistSensorUnit(String unit) {
-        sensorUnitExistValidator.validateExistSensorUnit(unit);
-    }
-
-    private void validateExistRange(RangeDTO range) {
-        sensorRangeExistValidator.validateExistRange(range);
-    }
-
-    private void validateCorrectRange(RangeDTO range) {
-     sensorRangeCorrectValidator.validateCorrectRange(range);
+    public void validateSensorRequestOnCreate(SensorRequestDTO sensorRequestDTO) {
+        sensorCreateValidator.validate(sensorRequestDTO);
     }
 
     @Override
-    public void validateExistingSensor(Long sensorId) {
-        sensorExistValidator.validateExistingSensor(sensorId);
+    public void validateSensorRequestOnDelete(Long sensorId) {
+        sensorDeleteValidator.validate(sensorId);
+    }
+
+    @Override
+    public void validateSensorRequestOnUpdate(Long sensorId, SensorRequestDTO sensorRequestDTO) {
+        sensorUpdateValidator.validate(sensorId, sensorRequestDTO);
     }
 }

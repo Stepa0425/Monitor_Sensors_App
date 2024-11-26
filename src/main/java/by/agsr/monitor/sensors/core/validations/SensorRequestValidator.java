@@ -5,7 +5,9 @@ import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 
 public interface SensorRequestValidator {
 
-    void validateSensorRequest(SensorRequestDTO sensorRequestDTO);
+    void validateSensorRequestOnCreate(SensorRequestDTO sensorRequestDTO);
 
-    void validateExistingSensor(Long sensorId);
+    void validateSensorRequestOnDelete(Long sensorId);
+
+    void validateSensorRequestOnUpdate(Long sensorId, SensorRequestDTO sensorRequestDTO);
 }

@@ -1,7 +1,8 @@
-package by.agsr.monitor.sensors.core.validations;
+package by.agsr.monitor.sensors.core.validations.sensorFieldValidators;
 
 
 import by.agsr.monitor.sensors.core.api.dto.RangeDTO;
+import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
 import by.agsr.monitor.sensors.core.models.Range;
 import by.agsr.monitor.sensors.core.repositories.RangeRepository;
@@ -29,33 +30,35 @@ public class SensorRangeExistValidatorTest {
     @Mock
     private RangeRepository rangeRepository;
 
+    private final SensorRequestDTO sensorRequestDTO = new SensorRequestDTO();
+
     @Test
     public void shouldDoNothingWhenRangeFound(){
         var from = 10;
         var to = 20;
+        sensorRequestDTO.setRange(new RangeDTO(from, to));
         when(rangeRepository.findByRangeFromAndRangeTo(from, to)).thenReturn(Optional.of(mock(Range.class)));
-        sensorRangeExistValidator.validateExistRange(new RangeDTO(from, to));
+        sensorRangeExistValidator.validateField(sensorRequestDTO);
         verify(rangeRepository).findByRangeFromAndRangeTo(from, to);
     }
 
     @Test
     public void shouldDoNothingWhenRangeNull(){
-        RangeDTO range = null;
-        sensorRangeExistValidator.validateExistRange(range);
+        sensorRangeExistValidator.validateField(sensorRequestDTO);
         verifyNoInteractions(rangeRepository);
     }
 
     @Test
     public void shouldDoNothingWhenRangeFromFieldNull(){
-        var range = new RangeDTO(null, 20);
-        sensorRangeExistValidator.validateExistRange(range);
+        sensorRequestDTO.setRange(new RangeDTO(null, 20));
+        sensorRangeExistValidator.validateField(sensorRequestDTO);
         verifyNoInteractions(rangeRepository);
     }
 
     @Test
     public void shouldDoNothingWhenRangeToFieldNull(){
-        var range = new RangeDTO(10, null);
-        sensorRangeExistValidator.validateExistRange(range);
+        sensorRequestDTO.setRange(new RangeDTO(10, null));
+        sensorRangeExistValidator.validateField(sensorRequestDTO);
         verifyNoInteractions(rangeRepository);
     }
 
@@ -63,9 +66,10 @@ public class SensorRangeExistValidatorTest {
     public void shouldThrowExceptionNotFoundRange(){
         var from = 10;
         var to = 20;
+        sensorRequestDTO.setRange(new RangeDTO(from, to));
         when(rangeRepository.findByRangeFromAndRangeTo(from, to)).thenReturn(Optional.empty());
         var exception = assertThrows(SensorRangeNotFoundException.class,
-                () -> sensorRangeExistValidator.validateExistRange(new RangeDTO(from, to)));
+                () -> sensorRangeExistValidator.validateField(sensorRequestDTO));
         assertEquals("The range {10, 20} not found.", exception.getMessage());
     }
 }
