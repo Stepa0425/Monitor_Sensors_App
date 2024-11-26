@@ -53,8 +53,7 @@ public class SensorController {
                     description = "Сенсор успешно создан.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = SensorResponseDTO.class))
-            ),
+                            schema = @Schema(implementation = SensorResponseDTO.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = """
@@ -89,7 +88,7 @@ public class SensorController {
 
 
     @Operation(summary = "Удалить сенсор", description = """
-            Удаляет сенсор по указанному ID. 
+            Удаляет сенсор по указанному ID.
             Требуется роль 'Administrator'. Ничего не возвращает.
             """)
     @ApiResponses({
