@@ -201,7 +201,7 @@ public class SensorServiceImplTest {
         when(converterDTO.convertToSensorResponseDTO(sensor1)).thenReturn(sensorResponse1);
         when(converterDTO.convertToSensorResponseDTO(sensor2)).thenReturn(sensorResponse2);
 
-        List<SensorResponseDTO> result = sensorService.getByName(name);
+        List<SensorResponseDTO> result = sensorService.getSensorsByName(name);
 
         assertEquals(2, result.size());
         verify(sensorRepository).findByNameContaining(name);
@@ -210,7 +210,7 @@ public class SensorServiceImplTest {
     @Test
     public void shouldReturnAllSensorsWhenEmptyName() {
         var name = "";
-        List<SensorResponseDTO> result = sensorService.getByName(name);
+        List<SensorResponseDTO> result = sensorService.getSensorsByName(name);
 
         assertThat(result).isEmpty();
         verify(sensorRepository, never()).findByNameContaining(anyString());
@@ -219,7 +219,7 @@ public class SensorServiceImplTest {
     @Test
     public void shouldReturnAllSensorsWhenNullName() {
         String name = null;
-        List<SensorResponseDTO> result = sensorService.getByName(name);
+        List<SensorResponseDTO> result = sensorService.getSensorsByName(name);
 
         assertThat(result).isEmpty();
         verify(sensorRepository, never()).findByNameContaining(anyString());
@@ -229,7 +229,7 @@ public class SensorServiceImplTest {
     public void shouldReturnEmptyListWhenNotFoundByName() {
         var name = "Nonexistent";
         when(sensorRepository.findByNameContaining(name)).thenReturn(List.of());
-        List<SensorResponseDTO> result = sensorService.getByName(name);
+        List<SensorResponseDTO> result = sensorService.getSensorsByName(name);
 
         assertThat(result).isEmpty();
         verify(sensorRepository).findByNameContaining(name);
@@ -253,7 +253,7 @@ public class SensorServiceImplTest {
         when(converterDTO.convertToSensorResponseDTO(sensor1)).thenReturn(sensorResponse1);
         when(converterDTO.convertToSensorResponseDTO(sensor2)).thenReturn(sensorResponse2);
 
-        List<SensorResponseDTO> result = sensorService.getByModel(model);
+        List<SensorResponseDTO> result = sensorService.getSensorsByModel(model);
 
         assertEquals(2, result.size());
         verify(sensorRepository).findByModelContaining(model);
@@ -262,7 +262,7 @@ public class SensorServiceImplTest {
     @Test
     public void shouldReturnAllSensorsWhenEmptyModel() {
         var model = "";
-        List<SensorResponseDTO> result = sensorService.getByModel(model);
+        List<SensorResponseDTO> result = sensorService.getSensorsByModel(model);
 
         assertThat(result).isEmpty();
         verify(sensorRepository, never()).findByModelContaining(anyString());
@@ -271,7 +271,7 @@ public class SensorServiceImplTest {
     @Test
     public void shouldReturnAllSensorsWhenNullModel() {
         String model = null;
-        List<SensorResponseDTO> result = sensorService.getByModel(model);
+        List<SensorResponseDTO> result = sensorService.getSensorsByModel(model);
 
         assertThat(result).isEmpty();
         verify(sensorRepository, never()).findByModelContaining(anyString());
@@ -281,7 +281,7 @@ public class SensorServiceImplTest {
     public void shouldReturnEmptyListWhenNotFoundByModel() {
         var model = "Nonexistent";
         when(sensorRepository.findByModelContaining(model)).thenReturn(List.of());
-        List<SensorResponseDTO> result = sensorService.getByModel(model);
+        List<SensorResponseDTO> result = sensorService.getSensorsByModel(model);
 
         assertThat(result).isEmpty();
         verify(sensorRepository).findByModelContaining(model);

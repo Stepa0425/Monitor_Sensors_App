@@ -15,7 +15,7 @@ public interface SensorService {
 
     SensorResponseDTO updateSensor(Long sensorId, SensorRequestDTO sensorRequestDTO);
 
-    List<SensorResponseDTO> getByName(String name);
+    List<SensorResponseDTO> getSensorsByName(String name);
 
-    List<SensorResponseDTO> getByModel(String model);
+    List<SensorResponseDTO> getSensorsByModel(String model);
 }
