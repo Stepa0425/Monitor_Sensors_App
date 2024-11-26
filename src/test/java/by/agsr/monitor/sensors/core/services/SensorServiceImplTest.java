@@ -108,7 +108,7 @@ public class SensorServiceImplTest {
     }
 
     @Test
-    void shouldDeleteSensorSuccessfully() {
+    public void shouldDeleteSensorSuccessfully() {
         var validSensorId = 1L;
         sensorService.deleteSensor(validSensorId);
 
@@ -117,7 +117,7 @@ public class SensorServiceImplTest {
     }
 
     @Test
-    void shouldThrowExceptionSensorNotFound() {
+    public void shouldThrowExceptionSensorNotFound() {
         var invalidSensorId = 999L;
         doThrow(new SensorNotFoundException(invalidSensorId))
                 .when(sensorValidator).validateSensorRequestOnDelete(invalidSensorId);
@@ -129,7 +129,7 @@ public class SensorServiceImplTest {
     }
 
     @Test
-    void shouldUpdateSensorSuccessfully() {
+    public void shouldUpdateSensorSuccessfully() {
         var sensorId = 1L;
         var sensorRequestDTO = new SensorRequestDTO();
         sensorRequestDTO.setName("Updated Sensor");
@@ -169,7 +169,7 @@ public class SensorServiceImplTest {
     }
 
     @Test
-    void shouldStopUpdateWhenThrowAnyExceptionOfValidationSensor() {
+    public void shouldStopUpdateWhenThrowAnyExceptionOfValidationSensor() {
         var sensorId = 1L;
         var sensorRequestDTO = new SensorRequestDTO();
 

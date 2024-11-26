@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: monitor_sensors
+    container_name: monitor_sensors_container
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/agsr_db
       SPRING_DATASOURCE_USERNAME: root

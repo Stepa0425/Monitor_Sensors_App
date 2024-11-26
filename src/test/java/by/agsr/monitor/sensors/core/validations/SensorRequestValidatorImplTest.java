@@ -34,7 +34,7 @@ public class SensorRequestValidatorImplTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenSensorCreateValidatorFails() {
+    public void shouldThrowExceptionWhenSensorCreateValidatorFails() {
         var sensorBadRequestDTO = mock(SensorRequestDTO.class);
         doThrow(new RuntimeException("Validation failed"))
                 .when(sensorCreateValidator).validate(sensorBadRequestDTO);
@@ -45,14 +45,14 @@ public class SensorRequestValidatorImplTest {
     }
 
     @Test
-    void shouldValidateSensorRequestOnDeleteSuccessfully() {
+    public void shouldValidateSensorRequestOnDeleteSuccessfully() {
         var validSensorId = 1L;
         sensorValidator.validateSensorRequestOnDelete(validSensorId);
         verify(sensorDeleteValidator, times(1)).validate(validSensorId);
     }
 
     @Test
-    void shouldThrowExceptionWhenSensorDeleteValidationFails() {
+    public void shouldThrowExceptionWhenSensorDeleteValidationFails() {
         var invalidSensorId = 999L;
         doThrow(new RuntimeException("Sensor not found"))
                 .when(sensorDeleteValidator).validate(invalidSensorId);
