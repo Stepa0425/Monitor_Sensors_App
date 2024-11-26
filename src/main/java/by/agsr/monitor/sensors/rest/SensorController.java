@@ -42,7 +42,11 @@ public class SensorController {
     private final SensorService sensorService;
 
 
-    @Operation(summary = "Создать сенсор", description = "Добавляет новый сенсор в систему. Требуется роль 'Administrator'. Возвращает информацию о созданном сенсоре.")
+    @Operation(summary = "Создать сенсор", description = """
+                    Добавляет новый сенсор в систему.
+                    Требуется роль 'Administrator'.
+                    Возвращает информацию о созданном сенсоре.
+                    """)
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
@@ -53,10 +57,13 @@ public class SensorController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Некорректные данные запроса. Возможно, отсутствуют обязательные поля или поля не соответствуют требуемым форматам.",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorDTO.class))
-            ),
-    })
+                    description = """
+                            Некорректные данные запроса. Возможно,
+                            отсутствуют обязательные поля или поля не соответствуют требуемым форматам.
+                            """,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorDTO.class)))})
     @PreAuthorize("hasRole('Administrator')")
     @PostMapping(path = "/sensors",
             consumes = "application/json",
@@ -72,8 +79,7 @@ public class SensorController {
             responseCode = "200", description = "Успешное выполнение запроса",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SensorResponseDTO.class))
-    )
+                    schema = @Schema(implementation = SensorResponseDTO.class)))
     @PreAuthorize("hasAnyRole('Administrator', 'Viewer')")
     @GetMapping(path = "/sensors", produces = "application/json")
     public ResponseEntity<?> getAllSensors() {
@@ -82,16 +88,18 @@ public class SensorController {
     }
 
 
-    @Operation(summary = "Удалить сенсор", description = "Удаляет сенсор по указанному ID. Требуется роль 'Administrator'. Ничего не возвращает.")
+    @Operation(summary = "Удалить сенсор", description = """
+            Удаляет сенсор по указанному ID. 
+            Требуется роль 'Administrator'. Ничего не возвращает.
+            """)
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "204", description = "Сенсор успешно удалён."
-            ),
+                    responseCode = "204", description = "Сенсор успешно удалён."),
             @ApiResponse(
                     responseCode = "400", description = "Сенсор с указанным ID не найден.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorDTO.class)))
-    })
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorDTO.class)))})
     @PreAuthorize("hasRole('Administrator')")
     @DeleteMapping(path = "/sensors/{id}")
     public ResponseEntity<?> deleteSensor(@PathVariable("id") Long sensorId) {
@@ -100,17 +108,22 @@ public class SensorController {
     }
 
 
-    @Operation(summary = "Обновить сенсор", description = "Обновляет данные существующего сенсора по ID.")
+    @Operation(summary = "Обновить сенсор",
+            description = "Обновляет данные существующего сенсора по ID.")
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200", description = "Сенсор успешно обновлен. Требуется роль 'Administrator'. Возвращает обновленный сенсор.",
-                    content = @Content(mediaType = "application/json",
+                    responseCode = "200", description = """
+                    Сенсор успешно обновлен. Требуется роль 'Administrator'.
+                    Возвращает обновленный сенсор.
+                    """,
+                    content = @Content(
+                            mediaType = "application/json",
                             schema = @Schema(implementation = SensorResponseDTO.class))),
             @ApiResponse(
                     responseCode = "400", description = "Некорректные данные запроса",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ValidationErrorDTO.class)))
-    })
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorDTO.class)))})
     @PreAuthorize("hasRole('Administrator')")
     @PutMapping(path = "/sensors/{id}",
             consumes = "application/json",
@@ -122,33 +135,36 @@ public class SensorController {
     }
 
 
-    @Operation(summary = "Найти сенсор по названию", description = "Возвращает список сенсоров по частичному совпадению названия. Если сенсоры найдены, возвращает их список.")
+    @Operation(summary = "Найти сенсор по названию", description = """
+            Возвращает список сенсоров по частичному совпадению названия.
+            Если сенсоры найдены, возвращает их список.
+            """)
     @ApiResponse(
             responseCode = "200",
             description = "Успешное выполнение запроса, возвращен список сенсоров, соответствующих запросу.",
             content = @Content(
                         mediaType = "application/json",
-                        schema = @Schema(implementation = SensorResponseDTO.class))
-    )
+                        schema = @Schema(implementation = SensorResponseDTO.class)))
     @PreAuthorize("hasAnyRole('Administrator', 'Viewer')")
     @GetMapping(path = "/sensors/search/byName", produces = "application/json")
     public ResponseEntity<?> findSensorsByName(@RequestParam(value = "name") String sensorName) {
-        var foundSensors = sensorService.getByName(sensorName);
+        var foundSensors = sensorService.getSensorsByName(sensorName);
         return ResponseEntity.status(HttpStatus.OK).body(foundSensors);
     }
 
 
-    @Operation(summary = "Найти сенсор по модели", description = "Возвращает список сенсоров по частичному совпадению модели. Если сенсоры найдены, возвращает их список.")
+    @Operation(summary = "Найти сенсор по модели", description = """
+            Возвращает список сенсоров по частичному совпадению модели.
+            Если сенсоры найдены, возвращает их список.""")
     @ApiResponse(
             responseCode = "200", description = "Успешное выполнение запроса, возвращен список сенсоров, соответствующих запросу.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SensorResponseDTO.class))
-    )
+                    schema = @Schema(implementation = SensorResponseDTO.class)))
     @PreAuthorize("hasAnyRole('Administrator', 'Viewer')")
     @GetMapping(path = "/sensors/search/byModel", produces = "application/json")
     public ResponseEntity<?> findSensorsByModel(@RequestParam(value = "model") String sensorModel) {
-        var foundSensors = sensorService.getByModel(sensorModel);
+        var foundSensors = sensorService.getSensorsByModel(sensorModel);
         return ResponseEntity.status(HttpStatus.OK).body(foundSensors);
     }
 }

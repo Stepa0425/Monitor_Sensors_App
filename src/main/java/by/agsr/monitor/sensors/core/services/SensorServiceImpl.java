@@ -65,14 +65,14 @@ class SensorServiceImpl implements SensorService {
     }
 
     @Override
-    public List<SensorResponseDTO> getByName(String name) {
+    public List<SensorResponseDTO> getSensorsByName(String name) {
         return isCorrectSearchValue(name)
                 ? findSensorsByName(name)
                 : getAllSensors();
     }
 
     @Override
-    public List<SensorResponseDTO> getByModel(String model) {
+    public List<SensorResponseDTO> getSensorsByModel(String model) {
         return isCorrectSearchValue(model)
                 ? findSensorsByModel(model)
                 : getAllSensors();
