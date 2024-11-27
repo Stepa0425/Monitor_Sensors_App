@@ -28,6 +28,7 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.POST, "/agsr/api/sensors/**").hasRole("Administrator");
                     auth.requestMatchers(HttpMethod.PUT, "/agsr/api/sensors/**").hasRole("Administrator");
                     auth.requestMatchers(HttpMethod.DELETE, "/agsr/api/sensors/**").hasRole("Administrator");
+                    auth.anyRequest().denyAll();
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();

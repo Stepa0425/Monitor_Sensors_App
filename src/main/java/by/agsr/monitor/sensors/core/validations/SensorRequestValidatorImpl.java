@@ -3,7 +3,6 @@ package by.agsr.monitor.sensors.core.validations;
 import by.agsr.monitor.sensors.core.api.dto.SensorRequestDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -11,13 +10,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SensorRequestValidatorImpl implements SensorRequestValidator {
 
-    @Autowired
     private final SensorCreateValidator sensorCreateValidator;
 
-    @Autowired
     private final SensorDeleteValidator sensorDeleteValidator;
 
-    @Autowired
     private final SensorUpdateValidator sensorUpdateValidator;
 
     @Override

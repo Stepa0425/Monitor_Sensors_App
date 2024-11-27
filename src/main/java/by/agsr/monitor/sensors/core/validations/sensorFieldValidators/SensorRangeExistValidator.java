@@ -5,14 +5,12 @@ import by.agsr.monitor.sensors.core.api.exceptions.SensorRangeNotFoundException;
 import by.agsr.monitor.sensors.core.repositories.RangeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SensorRangeExistValidator implements SensorFieldValidator {
 
-    @Autowired
     private final RangeRepository rangeRepository;
 
     public void validateField(SensorRequestDTO sensorRequestDTO) {

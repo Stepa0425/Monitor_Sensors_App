@@ -7,7 +7,6 @@ import by.agsr.monitor.sensors.core.repositories.SensorRepository;
 import by.agsr.monitor.sensors.core.validations.SensorRequestValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SensorServiceImpl implements SensorService {
 
-    @Autowired
     private final SensorRepository sensorRepository;
 
-    @Autowired
     private final ConverterDTO converterDTO;
 
-    @Autowired
     private final SensorRequestValidator sensorValidator;
 
     @Override

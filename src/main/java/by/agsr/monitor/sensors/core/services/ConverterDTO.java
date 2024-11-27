@@ -12,23 +12,19 @@ import by.agsr.monitor.sensors.core.repositories.SensorTypeRepository;
 import by.agsr.monitor.sensors.core.repositories.SensorUnitRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class ConverterDTO {
 
-    @Autowired
     private final SensorTypeRepository sensorTypeRepository;
 
-    @Autowired
     private final SensorUnitRepository sensorUnitRepository;
 
-    @Autowired
     private final RangeRepository rangeRepository;
 
-    public Sensor convertToSensor(SensorRequestDTO sensorRequestDTO) {
+    Sensor convertToSensor(SensorRequestDTO sensorRequestDTO) {
         Sensor sensor = new Sensor();
         Integer rangeFrom = sensorRequestDTO.getRange().getRangeFrom();
         Integer rangeTo = sensorRequestDTO.getRange().getRangeTo();
@@ -51,7 +47,7 @@ class ConverterDTO {
         return sensor;
     }
 
-    public SensorResponseDTO convertToSensorResponseDTO(Sensor sensor) {
+    SensorResponseDTO convertToSensorResponseDTO(Sensor sensor) {
         SensorResponseDTO sensorResponseDTO = new SensorResponseDTO();
         Integer rangeFrom = sensor.getRange().getRangeFrom();
         Integer rangeTo = sensor.getRange().getRangeTo();
